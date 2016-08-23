@@ -1,0 +1,95 @@
+scriptencoding utf-8
+
+filetype off
+set cursorline
+set autoindent
+set tabstop=2
+syntax on
+set wildmenu
+set encoding=utf-8
+set fileencoding=utf-8
+set noswapfile
+set nowritebackup
+set nobackup
+set ruler
+set backspace=indent,eol,start " Backspaceキーの影響範囲に制限を設けない"
+set autoread "外部でファイルに変更がされた場合は読みなおす
+set nobackup   " ファイル保存時にバックアップファイルを作らない
+set noswapfile " ファイル編集中にスワップファイルを作らない
+set hlsearch   " 検索文字列をハイライトする"
+set expandtab
+set shiftwidth=2
+set wildmenu wildmode=list:full
+
+" dictionary information
+autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
+autocmd FileType javascript :set dictionary=~/.vim/dict/js.dict filetype=js syntax=javascript
+
+" OSのクリップボードをレジスタ指定無しで Yank, Put 出来るようにする
+set clipboard=unnamed,unnamedplus
+
+set mouse=n
+
+" neobundle settings {{{
+if has('vim_starting')
+  set nocompatible
+  " neobundle をインストールしていない場合は自動インストール
+  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
+    echo "install neobundle..."
+    " vim からコマンド呼び出しているだけ neobundle.vim のクローン
+    :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+  endif
+  " runtimepath の追加は必須
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+call neobundle#begin(expand('~/.vim/bundle'))
+let g:neobundle_default_git_protocol='https'
+
+" neobundle#begin - neobundle#end の間に導入するプラグインを記載します。
+NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'derekwyatt/vim-scala'
+NeoBundle 'haml.zip'                            " Haml/Sass
+NeoBundle 'JavaScript-syntax'                   " JavaScript
+NeoBundle 'jQuery'                              " jQuery
+NeoBundle 'joker1007/vim-markdown-quote-syntax' " MarkDown内のコードをハイライト
+NeoBundle 'yuroyoro/vim-python'                 " python
+NeoBundle 'godlygeek/tabular'                   " テキスト整形
+NeoBundle 'yuroyoro/vim-autoclose'              " 閉じ括弧補完
+NeoBundle 'grep.vim'                            " Vimでgrepを実行
+NeoBundle 'tpope/vim-fugitive'					" Gitを使う
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'https://github.com/leafgarland/typescript-vim.git'
+NeoBundle 'https://github.com/clausreinke/typescript-tools.vim'
+
+" vimrc に記述されたプラグインでインストールされていないものがないかチェックする
+NeoBundleCheck
+call neobundle#end()
+filetype plugin indent on
+set t_Co=256
+colorscheme jellybeans
+
+
+if has('lua')
+  NeoBundleLazy 'Shougo/neocomplete.vim', {
+    \ 'depends' : 'Shougo/vimproc',
+    \ 'autoload' : { 'insert' : 1,}
+    \ }
+endif
+
+" neocomplete {{{
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_smart_case = 1
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_manual_completion_start_length = 1
+let g:neocomplcache_caching_percent_in_statusline = 1
+let g:neocomplcache_enable_skip_completion = 1
+let g:neocomplcache_skip_input_time = '0.5'
+inoremap <expr><C-h> neocomplcache#smart_close_popup().”\<C-h>”
+inoremap <expr><C-y> neocomplcache#close_popup()
+inoremap <expr><C-e> neocomplcache#cancel_popup()
+" }}}

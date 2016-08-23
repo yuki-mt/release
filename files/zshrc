@@ -1,0 +1,28 @@
+export ZSH=$HOME/.oh-my-zsh
+
+ZSH_THEME="robbyrussell"
+
+plugins=(git)
+
+export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/bin"
+# export MANPATH="/usr/local/man:$MANPATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH"
+export PATH="$HOME/.jdk/bin:$PATH"
+source $ZSH/oh-my-zsh.sh
+
+alias ml_env="source $HOME/.conda/envs/ml_env/bin/activate ml_env"
+alias rm-merged='git branch  --merged | grep -o "feature\/.*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
+gcf () { git checkout feature/$1 }
+gcfb () { git checkout -b feature/$1 }
+gcm () { git commit -m "$*" }
+cdp () { cd ~/Documents/platform/$1 }
+alias ga='git add -A && git diff --cached'
+alias gcd='git checkout develop && git pull'
+alias grh='git reset --hard HEAD'
+alias gp='git pull'
