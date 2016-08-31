@@ -2,33 +2,36 @@ scriptencoding utf-8
 
 filetype off
 set cursorline
+set expandtab
 set autoindent
 set tabstop=2
+set shiftwidth=2
 syntax on
-set wildmenu
 set encoding=utf-8
 set fileencoding=utf-8
 set noswapfile
 set nowritebackup
-set nobackup
 set ruler
-set backspace=indent,eol,start " Backspaceキーの影響範囲に制限を設けない"
+set vb t_vb=            " ヒープ音を鳴らさない
+set noerrorbells "エラーメッセージの表示時にビープを鳴らさない"
+set backspace=indent,eol,start " Backspaceキーの影響範囲に制限を設けない
 set autoread "外部でファイルに変更がされた場合は読みなおす
 set nobackup   " ファイル保存時にバックアップファイルを作らない
 set noswapfile " ファイル編集中にスワップファイルを作らない
-set hlsearch   " 検索文字列をハイライトする"
-set expandtab
-set shiftwidth=2
-set wildmenu wildmode=list:full
-
-" dictionary information
-autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
-autocmd FileType javascript :set dictionary=~/.vim/dict/js.dict filetype=js syntax=javascript
-
-" OSのクリップボードをレジスタ指定無しで Yank, Put 出来るようにする
+set hlsearch   " 検索文字列をハイライトする
+set ignorecase
 set clipboard=unnamed,unnamedplus
-
 set mouse=n
+set noeol " 改行のないファイルを作る " OSのクリップボードをレジスタ指定無しで Yank, Put >出来るようにする
+set wildmenu
+set wildmode=longest:full,full
+
+autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
+
+au BufNewFile,BufRead *.php set tags+=$HOME/.tags/php.tags  
+au BufNewFile,BufRead *.scala set tags+=$HOME/.tags/scala.tags  
+au BufNewFile,BufRead *.js set tags+=$HOME/.tags/js.tags
+au BufNewFile,BufRead *.py set tags+=$HOME/.tags/python.tags  
 
 " neobundle settings {{{
 if has('vim_starting')
@@ -45,32 +48,56 @@ endif
 call neobundle#begin(expand('~/.vim/bundle'))
 let g:neobundle_default_git_protocol='https'
 
-" neobundle#begin - neobundle#end の間に導入するプラグインを記載します。
+" neobundle plugin
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'derekwyatt/vim-scala'
-NeoBundle 'haml.zip'                            " Haml/Sass
-NeoBundle 'JavaScript-syntax'                   " JavaScript
-NeoBundle 'jQuery'                              " jQuery
-NeoBundle 'joker1007/vim-markdown-quote-syntax' " MarkDown内のコードをハイライト
-NeoBundle 'yuroyoro/vim-python'                 " python
-NeoBundle 'godlygeek/tabular'                   " テキスト整形
-NeoBundle 'yuroyoro/vim-autoclose'              " 閉じ括弧補完
-NeoBundle 'grep.vim'                            " Vimでgrepを実行
-NeoBundle 'tpope/vim-fugitive'					" Gitを使う
-NeoBundle 'mattn/emmet-vim'
+NeoBundle "ctrlpvim/ctrlp.vim"                  " Ctrl+pで柔軟なファイル検索が可能
 NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'https://github.com/leafgarland/typescript-vim.git'
-NeoBundle 'https://github.com/clausreinke/typescript-tools.vim'
-
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'kana/vim-submode'
+NeoBundle 'w0rp/ale'
+NeoBundle 'thinca/vim-quickrun'
+""" language-specific plugings
+"NeoBundle 'joker1007/vim-markdown-quote-syntax' " MarkDown内のコードをハイライト
+"NeoBundle 'yuroyoro/vim-python'                 " python
+"NeoBundle 'haml.zip'                            " Haml/Sass
+"NeoBundle 'nginx.vim'                           " nginx.conf
+"NeoBundle 'derekwyatt/vim-scala'
+"NeoBundle 'othree/yajs.vim'                    "ES6用
+"NeoBundle 'maxmellon/vim-jsx-pretty'
+"""
 " vimrc に記述されたプラグインでインストールされていないものがないかチェックする
 NeoBundleCheck
 call neobundle#end()
+
 filetype plugin indent on
 set t_Co=256
 colorscheme jellybeans
 
+" 有効にするlinter
+let g:ale_linters = {
+\   'python': ['flake8', 'mypy'],
+\}
+let g:ale_python_mypy_options = '--ignore-missing-imports'
+" エラー行に表示するマーク
+let g:ale_sign_error = '⨉'
+let g:ale_sign_warning = '⚠'
+" エラー行にカーソルをあわせた際に表示されるメッセージフォーマット
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" エラー表示の列を常時表示
+let g:ale_sign_column_always = 0
+" ファイルを保存したときにlint実行
+let g:ale_lint_on_save = 1
+" 編集中のlintはしない
+let g:ale_lint_on_text_changed = 'never'
+" lint結果をロケーションリストとQuickFixには表示しない
+" 出てると結構うざいしQuickFixを書き換えられるのは困る
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 0
+let g:ale_open_list = 0
+let g:ale_keep_list_window_open = 0
 
 if has('lua')
   NeoBundleLazy 'Shougo/neocomplete.vim', {
@@ -89,7 +116,42 @@ let g:neocomplcache_manual_completion_start_length = 1
 let g:neocomplcache_caching_percent_in_statusline = 1
 let g:neocomplcache_enable_skip_completion = 1
 let g:neocomplcache_skip_input_time = '0.5'
-inoremap <expr><C-h> neocomplcache#smart_close_popup().”\<C-h>”
-inoremap <expr><C-y> neocomplcache#close_popup()
-inoremap <expr><C-e> neocomplcache#cancel_popup()
+let g:neosnippet#snippets_directory='~/.vim/bundle/neosnippet-snippets/snippets/'
+inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
+
+imap <expr><Enter> pumvisible() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Enter>"
+smap <expr><Enter> pumvisible() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Enter>"
+imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>" 
+smap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>" 
 " }}}
+
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
+nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap <C-]> :exe("tjump ".expand('<cword>'))<CR>
+
+
+"nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+
+call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+
+command Qr QuickRun
+command Cd lcd %:h
+command Pwd echo expand("%:p")
