@@ -52,3 +52,10 @@ $ curl http://localhost:3000/json/users
 [detail for JSON Server](https://qiita.com/futoase/items/2859a60c8b240da70572)
 
 ## Build simple server to Heroku
+
+```
+heroku login
+heroku create
+git subtree push --prefix server heroku master
+heroku open # check if the server workds well
+```
