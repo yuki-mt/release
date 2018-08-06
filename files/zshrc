@@ -83,8 +83,14 @@ fshow() {
 cd-d() {
 	dist=`ls ~/Documents | fzf-tmux`
 	if [ -n "$dist" ]; then
-		cd ~/Documents/$dist
+		pushd ~/Documents/$dist
 	fi
+}
+cd-l() {
+    dist=`dirs -l -v | fzf | awk '{print $2}'`
+    if [ -n "$dist" ]; then
+        pushd $dist
+    fi
 }
 vim-mf() {
 	file=`mdfind -onlyin ./ "$*" | fzf`
