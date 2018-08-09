@@ -8,7 +8,7 @@ router.get('', function(req, res){
 });
 
 router.post('', function(req, res) {
-  console.log('body or form: ' + req.body);
+  console.log('body or form: ' + JSON.stringify(req.body));
   console.log('user agent: ' + req.header('User-Agent'));
   res.header('Content-Type', 'application/json; charset=utf-8');
   res.send({'body_or_form': req.body, 'reqest_headers': req.headers});
