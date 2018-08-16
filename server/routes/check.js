@@ -8,6 +8,7 @@ router.get('', function(req, res){
 });
 
 router.post('', function(req, res) {
+  console.log('query string: ' + req.query.name);
   console.log('body or form: ' + JSON.stringify(req.body));
   console.log('user agent: ' + req.header('User-Agent'));
   res.header('Content-Type', 'application/json; charset=utf-8');
