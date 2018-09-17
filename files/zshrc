@@ -1,14 +1,23 @@
 export ZSH=$HOME/.oh-my-zsh
-export DISABLE_AUTO_UPDATE=true
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+DISABLE_AUTO_UPDATE="true"
+
+export EDITOR='vim'
+
 ZSH_THEME="robbyrussell"
 
 plugins=(git brew gulp github fabric npm sbt scala)
 
-export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/bin"
-export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin"
+export PATH="$HOME/.rbenv/shims:$PATH"
 eval "$(rbenv init -)"
 
-export PATH=$HOME/.nvm/versions/node/v`cat $HOME/.nvm/alias/default`/bin:$PATH
+export PATH=$HOME/.nvm/versions/node/`cat $HOME/.nvm/alias/default`/bin:$PATH
 nvm() {
     unset -f nvm
     source "$HOME/.nvm/nvm.sh"
@@ -16,33 +25,33 @@ nvm() {
 }
 
 export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH"
-export PATH="$HOME/.jdk/bin:$PATH"
 source $ZSH/oh-my-zsh.sh
 
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
 alias rm-merged='git branch --merged | grep -v master | grep -v develop | grep -v "*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
 gc () { git checkout $1 }
 gcbf () { git checkout -b feature/$1 }
+gcb () { git checkout -b $1 }
 gcm () { git commit -m "$*" }
 gcl() {
-	branch=`git branch | fzf | sed 's/^[ |\*]*//'`
-	if [ -n "$branch" ]; then
-		git checkout $branch
-	fi
+    branch=`git branch | fzf | sed 's/^[ |\*]*//'`
+    if [ -n "$branch" ]; then
+        git checkout $branch
+    fi
 }
 gcr() {
-	branch=`git branch -r | fzf | sed 's/^[ |\*]*origin\///'`
-	if [ -n "$branch" ]; then
-		git checkout $branch
-	fi
+    branch=`git branch -r | fzf | sed 's/^[ |\*]*origin\///'`
+    if [ -n "$branch" ]; then
+        git checkout $branch
+    fi
 }
 alias ga='git add -A && git diff --cached'
 alias gcd='git checkout develop && git pull'
 alias grh='git reset --hard HEAD'
 alias gp='git pull'
 alias gs='git status'
-alias server-up='cd;./server.sh;node sample/index.js'
 alias gu='git submodule update'
+alias gl='git log --graph --color=always'
 or () {
     remote=`git remote -v | tr '\n' ' ' | awk '{print $2}' | head -1`
     if [ "$remote" = "http*" ]; then
@@ -53,56 +62,23 @@ or () {
 }
 ### /git aliases ###
 
-alias vu='cd ~/MyVagrant/centos && vagrant up'
-alias vs='cd ~/MyVagrant/centos && vagrant ssh'
 alias ctags="`brew --prefix`/bin/ctags"
 alias dri='docker rmi $(docker images -f "dangling=true" -qa)'
 alias drc='docker rm $(docker ps -aq)'
-set-tag () { ctags -R --languages=$1 -f $HOME/.tags/$1.tags `pwd` }
+st () { ctags -R --languages=$1 -f $HOME/.tags/$1.tags `pwd` }
 mf () { mdfind -onlyin ./ "$*" }
 cop () { cat $1 | pbcopy }
-sssh() {
-  local servers server
-  servers=$(grep -iE "^host[[:space:]]+[^*]" ~/.ssh/config | awk "{print \$2}") &&
-  server=$(echo "$servers" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$servers") )) +m) &&
-  echo "ssh to $server ...\n" && ssh $(echo "$server")
-}
-fshow() {
-  local out sha q
-  while out=$(
-      git log --graph --color=always \
-          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-      fzf --ansi --multi --no-sort --reverse --query="$q" --print-query); do
-    q=$(head -1 <<< "$out")
-    while read sha; do
-      git show --color=always $sha | less -R
-    done < <(sed '1d;s/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
-  done
-}
 cd-d() {
-	dist=`ls ~/Documents | fzf-tmux`
-	if [ -n "$dist" ]; then
-		pushd ~/Documents/$dist
-	fi
+    dist=`ls ~/Documents | fzf-tmux`
+    if [ -n "$dist" ]; then
+        pushd ~/Documents/$dist
+    fi
 }
 cd-l() {
     dist=`dirs -l -v | fzf | awk '{print $2}'`
     if [ -n "$dist" ]; then
         pushd $dist
     fi
-}
-vim-mf() {
-	file=`mdfind -onlyin ./ "$*" | fzf`
-	if [ -n "$file" ]; then
-		vim $file
-	fi
-}
-vim-fzf() {
-	file=`fzf`
-	if [ -n "$file" ]; then
-		vim $file
-	fi
 }
 vf() {
   file=`find . -name "*.$1" | fzf`
