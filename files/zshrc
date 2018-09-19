@@ -68,7 +68,7 @@ alias drc='docker rm $(docker ps -aq)'
 st () { ctags -R --languages=$1 -f $HOME/.tags/$1.tags `pwd` }
 mf () { mdfind -onlyin ./ "$*" }
 cop () { cat $1 | pbcopy }
-cd-d() {
+cdd() {
     dist=`ls ~/Documents | fzf-tmux`
     if [ -n "$dist" ]; then
         pushd ~/Documents/$dist
