@@ -1,0 +1,6 @@
+map h goBack
+map l goForward
+map sh previousTab
+map sl nextTab
+map :q removeTab
+map T restoreTab
