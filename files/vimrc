@@ -134,12 +134,12 @@ nnoremap <C-]> :exe("tjump ".expand('<cword>'))<CR>
 
 
 "nnoremap s <Nop>
-nnoremap sj <C-w>j
-nnoremap sk <C-w>k
-nnoremap sl <C-w>l
-nnoremap sh <C-w>h
+nnoremap J <C-w>j
+nnoremap K <C-w>k
+nnoremap L <C-w>l
+nnoremap H <C-w>h
 nnoremap ss :<C-u>sp<CR>
-nnoremap sv :<C-u>vs<CR>
+nnoremap t :<C-u>vs<CR>
 nnoremap sJ <C-w>J
 nnoremap sK <C-w>K
 nnoremap sL <C-w>L
