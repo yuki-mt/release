@@ -108,4 +108,7 @@ pyv () {
     echo "Error: you need to specify env name or set option" >&2
   fi
 }
+tm () {
+  tmux -f $SSHHOME/.sshrc.d/.tmux.conf
+}
 export VIMINIT="let \$MYVIMRC='$SSHHOME/.sshrc.d/.vimrc' | source \$MYVIMRC"
