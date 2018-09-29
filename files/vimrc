@@ -28,6 +28,7 @@ set wildmode=longest:full,full
 
 autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
 
+au BufNewFile,BufRead *.rb set tags+=$HOME/.tags/ruby.tags  
 au BufNewFile,BufRead *.php set tags+=$HOME/.tags/php.tags  
 au BufNewFile,BufRead *.cpp\|*.h set tags+=$HOME/.tags/C++.tags
 au BufNewFile,BufRead *.scala set tags+=$HOME/.tags/scala.tags  
@@ -128,9 +129,10 @@ smap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable() <Bar><bar> ne
 " }}}
 
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
-nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
-nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
-nnoremap <C-]> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap ch :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap ck :split<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap cr :exe("tjump ".expand('<cword>'))<CR>
+nnoremap cu <C-t>
 
 
 "nnoremap s <Nop>
