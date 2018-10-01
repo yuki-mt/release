@@ -157,5 +157,6 @@ call submode#map('bufmove', 'n', '', '+', '<C-w>+')
 call submode#map('bufmove', 'n', '', '-', '<C-w>-')
 
 command Qr QuickRun
+command Nt NERDTree %
 command Cd lcd %:h
 command Pwd echo expand("%:p")
