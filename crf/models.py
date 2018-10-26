@@ -17,6 +17,9 @@ class Sentence:
     def get(self, i):
         return self.__mors[i]
 
+    def to_tokens(self):
+        return [m.token for m in self.__mors]
+
     @property
     def length(self):
         return len(self.__mors)

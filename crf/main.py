@@ -14,8 +14,30 @@ train_feats = [sent2features(s) for s in c.train_sents]
 train(model_dr, train_feats, c.labels)
 
 p = Predictor(model_dr)
+words = []
+not_detected = []
 
-example_sent = c.test_sents[0]
-print(example_sent)
+for sent in c.test_sents:
+    tags = p.predict(sent2features(sent))
+    if set(tags) == set('O'):
+        not_detected.append(str(sent))
+    else:
+        word = ''
+        is_in_word = False
+        for tag, token in zip(tags, sent.to_tokens()):
+            if tag.startswith('B'):
+                is_in_word = True
+                word += token
+            elif tag.startswith('I'):
+                is_in_word = True
+                word += token
+            elif is_in_word:
+                is_in_word = False
+                words.append(word)
+                word = ''
 
-print("Predicted:", ' '.join(p.predict(sent2features(example_sent))))
+with open('detected_words.txt', 'w') as f:
+    f.write('\n'.join(words))
+
+with open('not_detected.txt', 'w') as f:
+    f.write('\n'.join(not_detected))
