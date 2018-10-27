@@ -3,10 +3,10 @@ import os
 import re
 from os.path import join, dirname
 from dotenv import load_dotenv
-from dawg import DAWG
 import pickle
 from models import Morpheme, Sentence
 from typing import List
+from ahocorasick import Automaton
 
 
 class CorpusReader:
@@ -21,6 +21,7 @@ class CorpusReader:
         self.train_sents = train_sents
         self.test_sents = test_sents
         self.labels = labels
+        self.__trie = None  # type: Automaton
 
     def save(self, dr='./'):
         with open(join(dr, self.LABEL), 'wb') as f:
@@ -40,54 +41,61 @@ class CorpusReader:
             test_sents = pickle.load(f)
         return CorpusReader(train_sents, test_sents, labels)
 
-    def read(self, path, border):
-        dotenv_path = join(dirname(__file__), '../.env')
+    def read_entities(self, path):
+        self.__trie = Automaton()
+        with open(path) as f:
+            for line in f:
+                ing = line.strip()
+                # 長すぎるentityはどうせマッチしないので追加しない
+                if len(ing) < 13:
+                    self.__trie.add_word(ing, len(ing))
+        self.__trie.make_automaton()
+        print('finish building AC Trie')
+
+    def read_sentences(self, path, entity_path=None):
+        if not self.__trie:
+            self.read_entities(entity_path)
+
+        dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
 
         mecab = MeCab.Tagger("-Ochasen -u {}".format(os.environ.get("NEOLOGD_FILE")))
         mecab.parse('')
-        ings = set()
-        is_ings = True
 
         train_sents = []
         labels = []
         test_sents = []
 
         with open(path) as f:
-            for i, line in enumerate(f):
-                ing = line.strip().split('\t')[0]
-                if is_ings:
-                    if len(ing) < 13:  # 長すぎるentityはどうせマッチしないので追加しない
-                        ings.add(ing)
-                    if i == border - 1:
-                        is_ings = False
-                        self.dawg = DAWG(ings)
-                else:
-                    sent = Sentence([])
-                    node = mecab.parseToNode(line)
-                    while node:
-                        if not node.surface:
-                            node = node.next
-                            continue
-                        features = node.feature.split(',')
-                        # 表層系、品詞1, 2と文字の種類を特徴量として追加
-                        sent.append(Morpheme(node.surface,
-                                    features[0],
-                                    features[1],
-                                    self.__get_word_type(node.surface)))
+            for line in f:
+                sent = Sentence([])
+                node = mecab.parseToNode(line.strip())
+                while node:
+                    if not node.surface:
                         node = node.next
-                    if sent.length == 0:
                         continue
-                    label = self.__annotate(line, sent)
-                    if label:
-                        train_sents.append(sent)
-                        labels.append(label)
-                    else:
-                        test_sents.append(sent)
+                    features = node.feature.split(',')
+                    # 表層系、品詞1, 2と文字の種類を特徴量として追加
+                    sent.append(Morpheme(node.surface,
+                                features[0],
+                                features[1],
+                                self.__get_word_type(node.surface)))
+                    node = node.next
+                if sent.length == 0:
+                    continue
+                label = self.__annotate(sent)
+                if label:
+                    train_sents.append(sent)
+                    labels.append(label)
+                else:
+                    test_sents.append(sent)
 
         self.train_sents = train_sents
         self.labels = labels
         self.test_sents = test_sents
+        print('finish reaiding file')
+        print('# of train_sents: ', len(train_sents))
+        print('# of test_sents: ', len(test_sents))
 
     def __get_word_type(self, word):
         if not word:
@@ -105,49 +113,50 @@ class CorpusReader:
             return 'SIG'
         return 'JP'
 
-    def __annotate(self, line: str, sent: Sentence):
-        # lineのどの場所がentityなのかを探す
+    def __get_label_range(self, sent: str):
+        # どの場所がentityなのかを探す
         label_ranges = []  # type: list
 
-        for i in range(len(line)):
-            ings = self.dawg.prefixes(line[i:])
-            if not ings:
-                continue
-            max_len = len(max(ings, key=len))
-            rng = (i, i + max_len)
+        for end, length in self.__trie.iter(str(sent)):
+            start = end - length + 1
             new_ranges = []
             to_be_added = True
-            for first, last in label_ranges:
-                if rng[0] < last and rng[1] > first:
-                    if last - first >= max_len:
-                        new_ranges.append((first, last))
+            for l_start, l_end in label_ranges:
+                # 被っていれば、長い方だけを残す
+                if start < l_end and end > l_start:
+                    if l_end - l_start >= end - start:
                         to_be_added = False
-                else:
-                    new_ranges.append((first, last))
+                    else:
+                        continue
+                new_ranges.append((l_start, l_end))
             if to_be_added:
-                new_ranges.append(rng)
+                new_ranges.append((start, end))
             label_ranges = new_ranges
+
+        return label_ranges
+
+    def __annotate(self, sent: Sentence):
+        label_ranges = self.__get_label_range(str(sent))
 
         if not label_ranges:
             return []
 
         # entityが見つかれば、そのsentにBIOでannotateする
         label = []
-        pos = 0
+        mor_start = 0
         for i in range(sent.length):
-            mor_last = pos + len(sent.get(i).token)
-            added_to_label = False
-            for first, last in label_ranges:
-                if first == pos and last >= mor_last:
-                    added_to_label = True
-                    label.append('B-ING')
+            mor_end = mor_start + len(sent.get(i).token) - 1
+            tag = None
+            for start, end in label_ranges:
+                if start == mor_start and end >= mor_end:
+                    tag = 'B-ING'
                     break
-                if first < pos and last >= mor_last:
-                    added_to_label = True
-                    label.append('I-ING')
+                if start < mor_start and end >= mor_end:
+                    tag = 'I-ING'
                     break
-            if not added_to_label:
-                label.append('O')
-            pos = mor_last
+            if not tag:
+                tag = 'O'
+            label.append(tag)
+            mor_start = mor_end + 1
 
         return label
