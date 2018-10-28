@@ -112,38 +112,13 @@ urlencode () {
 }
 
 pyv() {
-  if [ "$1" = "-i" ]; then
-    if [ -n "$2" ]; then
-      dist=$2
-    else
-      dist=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`
-    fi
-    mkdir -p ~/.pyvenv
-    python -m venv ~/.pyvenv/$dist
-    source ~/.pyvenv/$dist/bin/activate
+  dir=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`_venv
+  if [ -d "$dir" ]; then
+    source $dir/bin/activate
+  else
+    python -m venv $dir
+    source $dir/bin/activate
     pip install -U pip
     pip install flake8 mypy
-  elif [ "$1" = "-l" ]; then
-    dist=`ls ~/.pyvenv | fzf-tmux`
-    if [ -n "$dist" ]; then
-      source ~/.pyvenv/$dist/bin/activate
-    fi
-  elif [ "$1" = "-a" ]; then
-    dist=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`
-    if [ -n "$dist" ]; then
-      source ~/.pyvenv/$dist/bin/activate
-    fi
-  elif [ "$1" = "-d" ]; then
-    if [ -n "$2" ]; then
-      dist=$2
-    else
-      dist=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`
-    fi
-    rm -rf ~/.pyvenv/$dist
-    echo "delete venv: $dist"
-  elif [ -n "$1" ]; then
-    source ~/.pyvenv/$1/bin/activate
-  else
-    echo "Error: you need to specify env name or set option" >&2
   fi
 }
