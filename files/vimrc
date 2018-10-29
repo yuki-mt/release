@@ -131,9 +131,8 @@ smap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable() <Bar><bar> ne
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
 nnoremap ch :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
 nnoremap ck :split<CR> :exe("tjump ".expand('<cword>'))<CR>
-nnoremap cr :exe("tjump ".expand('<cword>'))<CR>
+nnoremap cj :exe("tjump ".expand('<cword>'))<CR>
 nnoremap cu <C-t>
-
 
 "nnoremap s <Nop>
 nnoremap sj <C-w>j
