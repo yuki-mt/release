@@ -62,12 +62,12 @@ alias gs='git status'
 alias gu='git submodule update'
 alias gl='git log --graph --color=always'
 or () {
-  remote=`git remote -v | tr '\n' ' ' | awk '{print $2}' | head -1`
-  if [ "$remote" = "http*" ]; then
-    open $remote
-  else
-    echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/" | xargs open
-  fi
+    remote=`git remote -v | grep origin | tr '\n' ' ' | awk '{print $2}' | head -1`
+    if [ "$remote" = "http*" ]; then
+        open $remote
+    else
+        echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/" | xargs open
+    fi
 }
 ### /git aliases ###
 
