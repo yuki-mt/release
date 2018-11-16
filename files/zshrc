@@ -75,7 +75,7 @@ alias ctags="`brew --prefix`/bin/ctags"
 alias dri='docker rmi $(docker images -f "dangling=true" -qa)'
 alias drc='docker rm $(docker ps -aq)'
 st () {
-  ctags -R --languages=$1 -f $HOME/.tags/$1.tags `pwd`
+  ctags -R --languages=$1 `pwd`
 }
 mf () {
   mdfind -onlyin ./ "$*"

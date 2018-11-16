@@ -28,13 +28,6 @@ set wildmode=longest:full,full
 
 autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
 
-au BufNewFile,BufRead *.rb set tags+=$HOME/.tags/ruby.tags  
-au BufNewFile,BufRead *.php set tags+=$HOME/.tags/php.tags  
-au BufNewFile,BufRead *.cpp\|*.h set tags+=$HOME/.tags/C++.tags
-au BufNewFile,BufRead *.scala set tags+=$HOME/.tags/scala.tags  
-au BufNewFile,BufRead *.js\|*.jsx\|*.ts\|*.tsx set tags+=$HOME/.tags/js.tags
-au BufNewFile,BufRead *.py set tags+=$HOME/.tags/python.tags  
-
 " neobundle settings {{{
 if has('vim_starting')
   set nocompatible
