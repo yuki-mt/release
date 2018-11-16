@@ -28,6 +28,9 @@ set wildmode=longest:full,full
 
 autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
 
+let git_root = system("echo `git rev-parse --show-toplevel`/tags")
+au BufNewFile,BufRead *.* execute "set tags=".git_root
+
 " neobundle settings {{{
 if has('vim_starting')
   set nocompatible

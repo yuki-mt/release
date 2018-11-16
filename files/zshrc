@@ -54,6 +54,7 @@ gcr() {
   fi
 }
 alias ga='git add -A && git diff --cached'
+alias gr='cd `git rev-parse --show-toplevel`'
 alias gcd='git checkout develop && git pull'
 alias grh='git reset --hard HEAD'
 alias gp='git pull'
@@ -75,7 +76,7 @@ alias ctags="`brew --prefix`/bin/ctags"
 alias dri='docker rmi $(docker images -f "dangling=true" -qa)'
 alias drc='docker rm $(docker ps -aq)'
 st () {
-  ctags -R --languages=$1 `pwd`
+  gr && ctags -R --exclude=.git --languages=$1 `pwd` && cd -
 }
 mf () {
   mdfind -onlyin ./ "$*"
