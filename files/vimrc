@@ -158,3 +158,7 @@ command Qr QuickRun
 command Nt NERDTree %
 command Cd lcd %:h
 command Pwd echo expand("%:p")
+command G GFiles
+command F Files
+command L Lines
+command H History
