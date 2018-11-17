@@ -25,6 +25,7 @@ set mouse=n
 set noeol " 改行のないファイルを作る " OSのクリップボードをレジスタ指定無しで Yank, Put >出来るようにする
 set wildmenu
 set wildmode=longest:full,full
+set rtp+=~/.fzf  " gitでfzfをインストールした場合
 
 autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
 
@@ -50,13 +51,14 @@ let g:neobundle_default_git_protocol='https'
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle "ctrlpvim/ctrlp.vim"                  " Ctrl+pで柔軟なファイル検索が可能
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'kana/vim-submode'
 NeoBundle 'w0rp/ale'
 NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+NeoBundle 'junegunn/fzf.vim'
 """ language-specific plugings
 "NeoBundle 'joker1007/vim-markdown-quote-syntax' " MarkDown内のコードをハイライト
 "NeoBundle 'yuroyoro/vim-python'                 " python

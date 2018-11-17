@@ -12,6 +12,7 @@ export EDITOR='vim'
 ZSH_THEME="robbyrussell"
 
 plugins=(git brew gulp github fabric npm sbt scala)
+setopt hist_ignore_dups
 
 export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$PATH"
