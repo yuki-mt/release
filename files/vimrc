@@ -126,7 +126,8 @@ imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable() <Bar><bar> ne
 smap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>" 
 " }}}
 
-nnoremap <silent><C-e> :NERDTreeToggle<CR>
+nnoremap <silent><C-p> :History<CR>
+nnoremap <silent><C-e> :NERDTreeFind<CR>
 nnoremap ch :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
 nnoremap ck :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 nnoremap cj :exe("tjump ".expand('<cword>'))<CR>
