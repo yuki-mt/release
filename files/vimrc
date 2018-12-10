@@ -162,3 +162,7 @@ command G GFiles
 command F Files
 command L Lines
 command H History
+command P set paste
+command Np set nopaste
+command Et set expandtab
+command Net set noexpandtab
