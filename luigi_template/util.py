@@ -6,6 +6,7 @@ python luigi_test.py -f --flt 4.51 --str-prm yeah!
 """
 import luigi
 import sys
+import os
 from abc import ABCMeta, abstractmethod
 from typing import Union
 
@@ -57,3 +58,12 @@ class AskTask(luigi.Task):
     def output(self):
         path = self.__class__.__name__ + '.txt'
         return luigi.LocalTarget(path)
+
+
+def run_luigi(output_path: str, task_name: str):
+    if '-f' in sys.argv:
+        if os.path.exists(output_path):
+            os.remove(output_path)
+        sys.argv.remove('-f')
+
+    luigi.run([task_name, '--workers', '1', '--local-scheduler'] + sys.argv[1:])

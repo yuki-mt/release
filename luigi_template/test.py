@@ -5,9 +5,7 @@ e.g.
 python luigi_test.py -f --flt 4.51 --str-prm yeah!
 """
 import luigi
-import sys
-import os
-from util import BaseTask, AskTask
+from util import BaseTask, AskTask, run_luigi
 from typing import Union
 
 
@@ -40,9 +38,4 @@ class Task2(BaseTask):
 
 
 if __name__ == '__main__':
-    if '-f' in sys.argv:
-        if os.path.exists(Task2.path):
-            os.remove(Task2.path)
-        sys.argv.remove('-f')
-
-    luigi.run(['Task2', '--workers', '1', '--local-scheduler'] + sys.argv[1:])
+    run_luigi(Task2.path, 'Task2')
