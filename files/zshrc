@@ -102,6 +102,7 @@ vm() {
   fi
 }
 alias kc='kubectl'
+alias kr='kubectl run -it --rm --image=centos:latest --restart=Never bash'
 kcg() {
   kubectl get $1 --all-namespaces | tail +2 | fzf | awk '{print "-n " $1 " "$2}' | tr "\n" " "
 }
