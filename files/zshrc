@@ -89,12 +89,6 @@ co() {
     pushd ~/Documents/$dist
   fi
 }
-cd-l() {
-  dist=`dirs -l -v | fzf | awk '{print $2}'`
-  if [ -n "$dist" ]; then
-    pushd $dist
-  fi
-}
 vf() {
   file=`find . -name "*.$1" | fzf`
   if [ -n "$file" ]; then
@@ -106,6 +100,22 @@ vm() {
   if [ -n "$file" ]; then
     vim $file
   fi
+}
+alias kc='kubectl'
+kcg() {
+  kubectl get $1 --all-namespaces | tail +2 | fzf | awk '{print "-n " $1 " "$2}' | tr "\n" " "
+}
+kg() {
+  kcg $1 | pbcopy
+}
+kd() {
+  kcg $1 | xargs kubectl describe $1
+}
+ke() {
+  kubectl exec -it $@
+}
+kl() {
+  kcg $1 | xargs kubectl logs -f
 }
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
