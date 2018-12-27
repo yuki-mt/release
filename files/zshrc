@@ -125,6 +125,7 @@ urlencode () {
 }
 
 pyv() {
+  gr
   dir=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`_venv
   if [ -d "$dir" ]; then
     source $dir/bin/activate
@@ -134,4 +135,5 @@ pyv() {
     pip install -U pip
     pip install flake8 mypy
   fi
+  cd -
 }
