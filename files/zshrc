@@ -30,6 +30,16 @@ source $ZSH/oh-my-zsh.sh
 
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
 alias rm-merged='git branch --merged | grep -v master | grep -v develop | grep -v "*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
+alias ga='git add -A && git diff --cached'
+alias gr='cd `git rev-parse --show-toplevel`'
+alias gcd='git checkout develop && git pull'
+alias grh='git reset --hard HEAD'
+alias gp='git pull'
+alias gpm='git pull upstream master'
+alias gs='git status'
+alias gu='git submodule update'
+alias gl='git log --graph --color=always'
+alias gg='git log --graph --color=always'
 gc () {
   git checkout $1
 }
@@ -54,22 +64,13 @@ gcr() {
     git checkout $branch
   fi
 }
-alias ga='git add -A && git diff --cached'
-alias gr='cd `git rev-parse --show-toplevel`'
-alias gcd='git checkout develop && git pull'
-alias grh='git reset --hard HEAD'
-alias gp='git pull'
-alias gpm='git pull upstream master'
-alias gs='git status'
-alias gu='git submodule update'
-alias gl='git log --graph --color=always'
 or () {
-    remote=`git remote -v | grep origin | tr '\n' ' ' | awk '{print $2}' | head -1`
-    if [ "$remote" = "http*" ]; then
-        open $remote
-    else
-        echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/" | xargs open
-    fi
+  remote=`git remote -v | grep origin | tr '\n' ' ' | awk '{print $2}' | head -1`
+  if [ "$remote" = "http*" ]; then
+    open $remote
+  else
+    echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/" | xargs open
+  fi
 }
 ### /git aliases ###
 
@@ -137,3 +138,5 @@ pyv() {
   fi
   cd -
 }
+
+if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
