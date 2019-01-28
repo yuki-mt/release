@@ -26,6 +26,10 @@ set noeol " 改行のないファイルを作る " OSのクリップボードを
 set wildmenu
 set wildmode=longest:full,full
 set rtp+=~/.fzf  " gitでfzfをインストールした場合
+set foldmethod=indent
+set nofoldenable
+set foldnestmax=10
+set foldlevel=2
 
 autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
 
@@ -145,6 +149,10 @@ nnoremap sJ <C-w>J
 nnoremap sK <C-w>K
 nnoremap sL <C-w>L
 nnoremap sH <C-w>H
+
+" for code folding
+nnoremap <space> za
+nnoremap <CR> zA
 
 call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
 call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
