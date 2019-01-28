@@ -131,6 +131,18 @@ imap <expr><TAB> pumvisible() ? "<C-n>" : neosnippet#jumpable() ? "<Plug>(neosni
 inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 " }}}
 
+augroup vimrc-local
+  autocmd!
+  autocmd BufNewFile,BufReadPost * call s:vimrc_local(expand('<afile>:p:h'))
+augroup END
+
+function! s:vimrc_local(loc)
+  let files = findfile('.vimrc.local', escape(a:loc, ' ') . ';', -1)
+  for i in reverse(filter(files, 'filereadable(v:val)'))
+    source `=i`
+  endfor
+endfunction
+
 nnoremap <silent><C-p> :History<CR>
 nnoremap <silent><C-e> :NERDTreeFind<CR>
 nnoremap ch :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
