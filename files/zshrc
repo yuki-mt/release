@@ -141,4 +141,6 @@ pyv() {
   cd -
 }
 
+[[ -z "$TMUX" && ! -z "$PS1" ]] && exec tmux
+
 if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
