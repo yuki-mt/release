@@ -86,10 +86,10 @@ mf () {
   mdfind -onlyin ./ "$*"
 }
 cop () { cat $1 | pbcopy }
-co() {
+co () {
   dist=`ls ~/Documents | fzf-tmux`
   if [ -n "$dist" ]; then
-    pushd ~/Documents/$dist
+    cd ~/Documents/$dist
   fi
 }
 vf() {
