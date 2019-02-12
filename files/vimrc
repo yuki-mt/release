@@ -190,5 +190,5 @@ command Net set noexpandtab
 
 nnoremap r <C-r>
 
-imap <C-f> <esc>
-noremap! <C-f> <esc>
+imap <C-u> <esc>
+noremap! <C-u> <esc>
