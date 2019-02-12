@@ -187,3 +187,8 @@ command P set paste
 command Np set nopaste
 command Et set expandtab
 command Net set noexpandtab
+
+nnoremap r <C-r>
+
+imap <C-u> <esc>
+noremap! <C-u> <esc>
