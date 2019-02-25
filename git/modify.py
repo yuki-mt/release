@@ -1,23 +1,27 @@
 """
 Githubをpythonから操作するサンプルコード
 
+Access Tokenはここから取得: https://github.com/settings/tokens
+
 pip install -U pip && pip install pygithub
 """
 from github import Github
 from github.GithubException import GithubException
-import configparser
 import sys
 
 
 WORKING_BRANCH = 'feature/test'
 TARGET_BRANCH = 'master'
 BASE_URL = 'https://github.com/api/v3'
+ACCESS_TOKEN = 'xxx'
+ORG = 'yuki-mt'
+REPO_NAME = 'scripts'
+
 IS_SUCCESS_KEY = 'success'
 SUCCESS_RESULT = {IS_SUCCESS_KEY: True}
 
 
 def main():
-    config = configparser.ConfigParser()
     """
     git_token.conf should be like:
     -----------------
@@ -25,25 +29,20 @@ def main():
     access_token=YOUR_GIT_ACCESS_TOKEN
     -----------------
     """
-    config.read('config/git_token.conf')
-    ACCESS_TOKEN = config['default']['access_token']
-    ORG = 'yuki-mt'
-    REPO_NAME = 'scripts'
     repo_path = f"{ORG}/{REPO_NAME}"
 
     try:
         g = Github(ACCESS_TOKEN, base_url=BASE_URL)
         # git checkout
         repo = g.get_repo(repo_path)
-        # branch = repo.get_branch(WORKING_BRANCH)
     except GithubException as e:
         print(type(e.data))
         msg = "Failed to get branch\n{0}(err={1})".format(e.data, e.status)
         sys.stderr.write(msg)
         return -1
 
-    # print(delete_file(repo, 'sample.txt'))
-    # print(edit_file(repo, 'sample.txt', 'aaafea'))
+    print(delete_file(repo, 'sample.txt'))
+    print(edit_file(repo, 'sample.txt', 'aaafea'))
     print(merge(repo))
 
 
