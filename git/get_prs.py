@@ -1,3 +1,11 @@
+"""
+githubから関係あるPRを取得する
+
+## 手順
+- Access Tokenはここから取得: https://github.com/settings/tokens
+- config.json.sample を参考にconfig.jsonを作成
+- run `python get_prs.py`
+"""
 import json
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode
@@ -17,6 +25,7 @@ for c in config:
     if c["host"] == 'github.com':
         base_url = 'https://api.github.com/search/issues'
     else:
+        # for Gitlab
         base_url = f'https://{c["host"]}/api/v3/search/issues'
 
     items = []  # type: List[Dict]

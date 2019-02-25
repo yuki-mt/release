@@ -1,0 +1,4 @@
+[
+  {"host": "git.example.com", "username": "foo", "access_token": "yyy"},
+  {"host": "github.com", "username": "yuki-mt", "access_token": "xxx"}
+]
