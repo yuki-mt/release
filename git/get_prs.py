@@ -11,6 +11,10 @@ from urllib.request import urlopen, Request
 from urllib.parse import urlencode
 import base64
 from typing import List, Dict, MutableSet
+import os
+
+
+CURDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_basic_auth(username, token):
@@ -18,7 +22,7 @@ def get_basic_auth(username, token):
     return {"Authorization": "Basic " + basic_user_and_pasword.decode('utf-8')}
 
 
-with open('./config.json') as f:
+with open(os.path.join(CURDIR, 'config.json')) as f:
     config = json.loads(f.read())
 
 for c in config:
