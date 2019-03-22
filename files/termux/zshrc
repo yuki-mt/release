@@ -111,5 +111,5 @@ pyv() {
   fi
   cd -
 }
-
-[ $SHLVL = 1 ] && termux-chroot
+# TODO: 動作が遅くなるので、必要な時だけする
+# [ $SHLVL = 1 ] && termux-chroot

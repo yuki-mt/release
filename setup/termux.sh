@@ -8,7 +8,7 @@
 ## 1.
 apt update && apt upgrade
 termux-chroot
-pkg install -y vim-python curl zsh proot clang make
+pkg install -y vim-python curl zsh proot clang makea python-dev libcurl-dev libcrypt-dev openssl-dev
 bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 
 ## 2.
@@ -16,7 +16,8 @@ bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 
 ## 3.
 # mkdir ~/workspace
-# pkg install -y fzf tmux open-ssh
+# pkg install -y fzf tmux openssh
+# ssh-keygen
 # 
 # ./git.sh
 # cp ../files/termux/tmux.conf ~/.tmux.conf
@@ -29,6 +30,7 @@ bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 # cp ../files/termux/zshrc ~/.zshrc
 # source ~/.zshrc
 # git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+# termux-chroot
 # pyenv install 3.6.8
 # pyenv global 3.6.8
 # pip install -U pip
