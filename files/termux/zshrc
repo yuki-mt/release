@@ -1,0 +1,115 @@
+export ZSH=$HOME/.oh-my-zsh
+
+DISABLE_AUTO_UPDATE="true"
+
+export EDITOR='vim'
+
+ZSH_THEME="robbyrussell"
+
+plugins=(git github npm)
+setopt hist_ignore_dups
+
+# export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
+
+# export PATH=$HOME/.nvm/versions/node/`cat $HOME/.nvm/alias/default`/bin:$PATH
+# nvm() {
+#   unset -f nvm
+#   source "$HOME/.nvm/nvm.sh"
+#   nvm "$@"
+# }
+# 
+export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH"
+source $ZSH/oh-my-zsh.sh
+
+### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
+alias rm-merged='git branch --merged | grep -v master | grep -v develop | grep -v "*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
+alias ga='git add -A && git diff --cached'
+alias gr='cd `git rev-parse --show-toplevel`'
+alias gcd='git checkout develop && git pull'
+alias grh='git reset --hard HEAD'
+alias gp='git pull'
+alias gpm='git pull upstream master'
+alias gs='git status'
+alias gu='git submodule update'
+alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all --date-order"
+gc () {
+  git checkout $1
+}
+gcbf () {
+  git checkout -b feature/$1
+}
+gcb () {
+  git checkout -b $1
+}
+gcm () {
+  git commit -m "$*"
+}
+gcl() {
+  branch=`git branch | fzf | sed 's/^[ |\*]*//'`
+  if [ -n "$branch" ]; then
+    git checkout $branch
+  fi
+}
+gcr() {
+  branch=`git branch -r | fzf | sed 's/^[ |\*]*origin\///'`
+  if [ -n "$branch" ]; then
+    git checkout $branch
+  fi
+}
+or () {
+  remote=`git remote -v | grep origin | tr '\n' ' ' | awk '{print $2}' | head -1`
+  if [ "$remote" = "http*" ]; then
+    open $remote
+  else
+    echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/" | xargs open
+  fi
+}
+### /git aliases ###
+
+kill-grep () {
+  ps aux | grep $1 | grep -v grep | awk '{print $2}' | xargs sudo kill -9
+}
+st () {
+  gr && ctags -R --exclude=.git --languages=$1 `pwd` && cd -
+}
+mf () {
+  mdfind -onlyin ./ "$*"
+}
+co () {
+  dist=`ls ~/workspace | fzf`
+  if [ -n "$dist" ]; then
+    cd ~/workspace/$dist
+  fi
+}
+vf() {
+  file=`find . -name "*.$1" | fzf`
+  if [ -n "$file" ]; then
+  vim $file
+  fi
+}
+vm() {
+  file=`git grep "$1" | fzf | cut -f1 -d:`
+  if [ -n "$file" ]; then
+    vim $file
+  fi
+}
+
+urlencode () {
+  echo "$1" | nkf -WwMQ | tr '\n' % | sed -e "s/=%//g" | sed -e "s/%//g" | tr = %
+}
+
+pyv() {
+  gr
+  dir=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`_venv
+  if [ -d "$dir" ]; then
+    source $dir/bin/activate
+  else
+    python -m venv $dir
+    source $dir/bin/activate
+    pip install -U pip
+    pip install flake8 mypy
+  fi
+  cd -
+}
+
+[ $SHLVL = 1 ] && termux-chroot

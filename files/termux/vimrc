@@ -1,0 +1,193 @@
+scriptencoding utf-8
+
+filetype off
+set cursorline
+set expandtab
+set autoindent
+set tabstop=2
+set shiftwidth=2
+syntax on
+set encoding=utf-8
+set fileencoding=utf-8
+set noswapfile
+set nowritebackup
+set ruler
+set vb t_vb=            " ヒープ音を鳴らさない
+set noerrorbells "エラーメッセージの表示時にビープを鳴らさない"
+set backspace=indent,eol,start " Backspaceキーの影響範囲に制限を設けない
+set autoread "外部でファイルに変更がされた場合は読みなおす
+set nobackup   " ファイル保存時にバックアップファイルを作らない
+set noswapfile " ファイル編集中にスワップファイルを作らない
+set hlsearch   " 検索文字列をハイライトする
+set ignorecase
+set clipboard=unnamed,unnamedplus
+set mouse=n
+set noeol " 改行のないファイルを作る " OSのクリップボードをレジスタ指定無しで Yank, Put >出来るようにする
+set wildmenu
+set wildmode=longest:full,full
+set rtp+= ""TODO:
+set foldmethod=indent
+set nofoldenable
+set foldnestmax=10
+set foldlevel=2
+
+autocmd BufRead *.php\|*.ctp :set dictionary=~/.vim/dict/php.dict filetype=php
+
+let git_root = system("echo `git rev-parse --show-toplevel`/tags")
+au BufNewFile,BufRead *.* execute "set tags=".git_root
+
+" neobundle settings {{{
+if has('vim_starting')
+  set nocompatible
+  " neobundle をインストールしていない場合は自動インストール
+  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
+    echo "install neobundle..."
+    :call system("git clone https://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim")
+  endif
+  " runtimepath の追加は必須
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+call neobundle#begin(expand('~/.vim/bundle'))
+let g:neobundle_default_git_protocol='https'
+
+" neobundle plugin
+NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'kana/vim-submode'
+NeoBundle 'w0rp/ale'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+NeoBundle 'junegunn/fzf.vim'
+""" language-specific plugings
+"NeoBundle 'joker1007/vim-markdown-quote-syntax' " MarkDown内のコードをハイライト
+"NeoBundle 'yuroyoro/vim-python'                 " python
+"NeoBundle 'haml.zip'                            " Haml/Sass
+"NeoBundle 'nginx.vim'                           " nginx.conf
+"NeoBundle 'derekwyatt/vim-scala'
+"NeoBundle 'othree/yajs.vim'                    "ES6用
+"NeoBundle 'maxmellon/vim-jsx-pretty'
+"""
+" vimrc に記述されたプラグインでインストールされていないものがないかチェックする
+NeoBundleCheck
+call neobundle#end()
+
+filetype plugin indent on
+set t_Co=256
+colorscheme jellybeans
+
+let NERDTreeShowHidden=1
+
+" 有効にするlinter
+let g:ale_linters = {
+\   'python': ['flake8', 'mypy'],
+\}
+let g:ale_python_mypy_options = '--ignore-missing-imports'
+let g:ale_python_flake8_options = '--max-line-length=100'
+" エラー行に表示するマーク
+let g:ale_sign_error = '⨉'
+let g:ale_sign_warning = '⚠'
+" エラー行にカーソルをあわせた際に表示されるメッセージフォーマット
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" エラー表示の列を常時表示
+let g:ale_sign_column_always = 0
+" ファイルを保存したときにlint実行
+let g:ale_lint_on_save = 1
+" 編集中のlintはしない
+let g:ale_lint_on_text_changed = 'never'
+" lint結果をロケーションリストとQuickFixには表示しない
+" 出てると結構うざいしQuickFixを書き換えられるのは困る
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 0
+let g:ale_open_list = 0
+let g:ale_keep_list_window_open = 0
+
+if has('lua')
+  NeoBundleLazy 'Shougo/neocomplete.vim', {
+    \ 'depends' : 'Shougo/vimproc',
+    \ 'autoload' : { 'insert' : 1,}
+    \ }
+endif
+
+" neocomplete {{{
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_smart_case = 1
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_manual_completion_start_length = 1
+let g:neocomplcache_caching_percent_in_statusline = 1
+let g:neocomplcache_enable_skip_completion = 1
+let g:neocomplcache_skip_input_time = '0.5'
+let g:neosnippet#snippets_directory='~/.vim/bundle/neosnippet-snippets/snippets/'
+" エンターキーで補完候補の確定. スニペットの展開もエンターキーで確定
+imap <expr><CR> neosnippet#expandable() ? "<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "<C-y>" : "<CR>"
+" タブキーで補完候補の選択. スニペット内のジャンプもタブキーでジャンプ
+imap <expr><TAB> pumvisible() ? "<C-n>" : neosnippet#jumpable() ? "<Plug>(neosnippet_expand_or_jump)" : "<TAB>"
+inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
+" }}}
+
+augroup vimrc-local
+  autocmd!
+  autocmd BufNewFile,BufReadPost * call s:vimrc_local(expand('<afile>:p:h'))
+augroup END
+
+function! s:vimrc_local(loc)
+  let files = findfile('.vimrc.local', escape(a:loc, ' ') . ';', -1)
+  for i in reverse(filter(files, 'filereadable(v:val)'))
+    source `=i`
+  endfor
+endfunction
+
+nnoremap <silent><C-p> :History<CR>
+nnoremap <silent><C-e> :NERDTreeFind<CR>
+nnoremap ch :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap ck :split<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap cj :exe("tjump ".expand('<cword>'))<CR>
+nnoremap cu <C-t>
+
+"nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap - :<C-u>sp<CR>
+nnoremap t :<C-u>vs<CR>
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+
+" for code folding
+nnoremap <space> za
+nnoremap <CR> zA
+
+call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+
+command Qr QuickRun
+command Nt NERDTree %
+command Cd lcd %:h
+command Pwd echo expand("%:p")
+command G GFiles
+command F Files
+command L Lines
+command H History
+command P set paste
+command Np set nopaste
+command Et set expandtab
+command Net set noexpandtab
+
+nnoremap r <C-r>
+
+imap <C-u> <esc>
+noremap! <C-u> <esc>
