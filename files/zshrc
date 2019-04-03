@@ -137,8 +137,21 @@ pyv() {
     source $dir/bin/activate
     pip install -U pip
     pip install flake8 mypy
+    pip freeze | sort > .requirements.ignore
   fi
   cd -
+}
+
+pip-freeze() {
+   gr
+  if [ -f ".requirements.ignore" ]; then
+    pip freeze | sort > tmp-req.txt
+    comm -13 .requirements.ignore tmp-req.txt > requirements.txt
+    rm tmp-req.txt
+  else
+    echo '.requirements.ignore is not found.'
+    pip freeze | sort > requirements.txt
+  fi
 }
 
 [[ -z "$TMUX" && ! -z "$PS1" ]] && exec tmux
