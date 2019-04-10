@@ -187,6 +187,7 @@ command Et set expandtab
 command Net set noexpandtab
 
 nnoremap r <C-r>
+inoremap <silent> jj <ESC>
 
 imap <C-u> <esc>
 noremap! <C-u> <esc>
