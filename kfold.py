@@ -5,11 +5,9 @@ pip install -U pip && pip install numpy pandas pip install scikit-learn
 """
 
 import pandas as pd
-import numpy as np
 import argparse
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import precision_recall_fscore_support
-from collections import defaultdict
 
 
 parser = argparse.ArgumentParser()
@@ -18,17 +16,19 @@ parser.add_argument('--split', '-s', type=int, required=True)
 args = parser.parse_args()
 
 df = pd.read_csv(args.corpus, sep='\t')
-df = df.loc[df['query'].notnull(), :].ix[:,['label', 'query']].drop_duplicates()
+df = df.loc[df['query'].notnull(), :].ix[:, ['label', 'query']].drop_duplicates()
 
 skf = StratifiedKFold(n_splits=args.split, shuffle=True)
+
 
 # FIXME: make actual model
 def train(data):
     return 'model'
 
+
 n = 1
-labels = [] # type: list
-predicts = [] # type: list
+labels = []  # type: list
+predicts = []  # type: list
 for train_idx, test_idx in skf.split(df, df['label']):
     """ for np.array
     trains = list(ary[train_idx])
@@ -44,7 +44,7 @@ for train_idx, test_idx in skf.split(df, df['label']):
     labels.extend(test_df['label'])
     predicts.extend(test_df['predict'])
 
-    train_df.to_csv('data/{}_th_train.txt'.format(n), sep='\t', encoding='utf-8', index=False, header=False)
+    train_df.to_csv(f'data/{n}_th_train.txt', sep='\t', encoding='utf-8', index=False, header=False)
     test_df.to_csv('data/{}_th_test.txt'.format(n), sep='\t', encoding='utf-8', index=False)
     n += 1
 
@@ -53,7 +53,7 @@ uniq_labels = list(set(predicts))
 precisions, recalls, f_measures, supports = \
     precision_recall_fscore_support(labels, predicts, labels=uniq_labels)
 
-results = {} # type: dict
+results = {}  # type: dict
 for i, l in enumerate(uniq_labels):
     results[l] = {}
     results[l]["precision"] = precisions[i]
