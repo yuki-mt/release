@@ -8,7 +8,7 @@
 ## 1.
 apt update && apt upgrade
 termux-chroot
-pkg install -y vim-python curl proot clang make python-dev libcurl-dev libcrypt-dev openssl-dev
+pkg install -y sed vim-python curl proot clang make python-dev libcurl-dev libcrypt-dev openssl-dev
 bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 
 ## 2.
