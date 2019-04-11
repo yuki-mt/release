@@ -1,4 +1,5 @@
 ### before install
+# pkg upgrade
 # pkg install -y git
 # git clone https://github.com/yuki-mt/scripts
 # cd scripts/setup
@@ -7,8 +8,10 @@
 
 ## 1.
 apt update && apt upgrade
-termux-chroot
-pkg install -y vim-python curl proot clang make python-dev libcurl-dev libcrypt-dev openssl-dev
+pkg install -y vim-python curl clang make python-dev libcurl-dev libcrypt-dev openssl-dev ruby
+apt install -y coreutils nodejs ruby-dev libxml2-dev libxslt-dev pkg-config make clang
+npm install -y -g n
+n latest
 bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 
 ## 2.
@@ -29,9 +32,5 @@ bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 # 
 # cp ../files/termux/zshrc ~/.zshrc
 # source ~/.zshrc
-# git clone https://github.com/yyuu/pyenv.git ~/.pyenv
-# termux-chroot
-# pyenv install 3.6.8
-# pyenv global 3.6.8
 # pip install -U pip
 # pip install flake8 mypy
