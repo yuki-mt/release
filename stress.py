@@ -39,7 +39,7 @@ def request(query):
         end = time.time()
         status = 0
         timeout = True
-    except Exception as _:
+    except Exception:
         end = time.time()
         status = 400
         timeout = True
@@ -82,7 +82,8 @@ for status in statuses:
 print("Timeout requests: " + str(num_timeout))
 print("Average latency (msec): " + str(round(np.sum(elapses) / len(elapses), 3)))
 for i in [50, 66, 75, 80, 90, 95, 98, 99, 100]:
-    print("{0:>3} th percentile latency (msec): ".format(i) + str(round(np.percentile(elapses, i), 3)))
+    latency = round(np.percentile(elapses, i), 3)
+    print("{0:>3} th percentile latency (msec): {}".format(i, latency))
 
 for i in range(11):
     if i == 0:
