@@ -11,7 +11,6 @@ apt update && apt upgrade
 pkg install -y sed vim-python curl proot clang make python-dev libcurl-dev libcrypt-dev openssl-dev ruby
 apt install -y coreutils nodejs ruby-dev libxml2-dev libxslt-dev pkg-config make clang
 npm install -y -g n
-n latest
 bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 
 ## 2.
@@ -34,3 +33,5 @@ bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 # source ~/.zshrc
 # pip install -U pip
 # pip install flake8 mypy
+# termux-chroot
+# n latest
