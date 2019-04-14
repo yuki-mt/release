@@ -18,7 +18,6 @@ setopt hist_ignore_dups
 #   nvm "$@"
 # }
 # 
-export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH"
 source $ZSH/oh-my-zsh.sh
 
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
