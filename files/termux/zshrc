@@ -110,5 +110,6 @@ pyv() {
   fi
   cd -
 }
+alias pip-uninstall-all="pip list | tail -n +3 | awk '{print $1}' | grep -v setuptools | grep -v pip | xargs pip uninstall -y"
 # TODO: 動作が遅くなるので、必要な時だけする
 # [ $SHLVL = 1 ] && termux-chroot
