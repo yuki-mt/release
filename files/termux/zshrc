@@ -9,15 +9,6 @@ ZSH_THEME="robbyrussell"
 plugins=(git github npm)
 setopt hist_ignore_dups
 
-# export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
-
-# export PATH=$HOME/.nvm/versions/node/`cat $HOME/.nvm/alias/default`/bin:$PATH
-# nvm() {
-#   unset -f nvm
-#   source "$HOME/.nvm/nvm.sh"
-#   nvm "$@"
-# }
-# 
 source $ZSH/oh-my-zsh.sh
 
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
@@ -97,19 +88,6 @@ urlencode () {
   echo "$1" | nkf -WwMQ | tr '\n' % | sed -e "s/=%//g" | sed -e "s/%//g" | tr = %
 }
 
-pyv() {
-  gr
-  dir=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`_venv
-  if [ -d "$dir" ]; then
-    source $dir/bin/activate
-  else
-    python -m venv $dir
-    source $dir/bin/activate
-    pip install -U pip
-    pip install flake8 mypy
-  fi
-  cd -
-}
 alias pip-uninstall-all="pip list | tail -n +3 | awk '{print $1}' | grep -v setuptools | grep -v pip | xargs pip uninstall -y"
 # TODO: 動作が遅くなるので、必要な時だけする
 # [ $SHLVL = 1 ] && termux-chroot
