@@ -1,0 +1,13 @@
+{
+  "name": "test",
+  "region": "sgp1",
+  "size": "s-1vcpu-1gb",
+  "image": "centos-7-x64",
+  "ssh_keys": [24352813],
+  "backups": false,
+  "ipv6": false,
+  "user_data": null,
+  "private_networking": null,
+  "volumes": null,
+  "tags": ["work"]
+}
