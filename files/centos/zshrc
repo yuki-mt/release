@@ -14,8 +14,7 @@ ZSH_THEME="robbyrussell"
 plugins=(git github npm)
 setopt hist_ignore_dups
 
-export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin"
-export PATH="$HOME/.rbenv/shims:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 export PATH=$HOME/.nvm/versions/node/`cat $HOME/.nvm/alias/default`/bin:$PATH

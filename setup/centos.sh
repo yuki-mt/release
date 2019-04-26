@@ -16,19 +16,27 @@ set -eu
 ./git.sh
 
 # pyenv, rbenv, nvm
-sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc
 git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 git clone git://github.com/creationix/nvm.git ~/.nvm
 git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 cp ../files/centos/zshrc ~/.zshrc
-source ~/.zshrc
+
+export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:${PATH}"
 pyenv install 3.6.8
 pyenv global 3.6.8
+
+source ~/.nvm/nvm.sh
+nvm install v10.15.3
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 rbenv install -v 2.6.3
 rbenv rehash
 rbenv global 2.6.3
-nvm install v10.15.3
+
+source ~/.zshrc
 
 # Python basic
 pip install -U pip
@@ -38,7 +46,7 @@ cd $(jupyter --data-dir)/nbextensions
 git clone https://github.com/lambdalisue/jupyter-vim-binding vim_binding
 jupyter nbextension enable vim_binding/vim_binding --sys-prefix
 
-# vim
+# FIXME: vim 
 sudo yum update -y vim*
 sudo yum install -y vim
 git clone --depth=1 https://github.com/universal-ctags/ctags.git
