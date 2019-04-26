@@ -11,7 +11,7 @@ export EDITOR='vim'
 
 ZSH_THEME="robbyrussell"
 
-plugins=(git brew github npm sbt scala)
+plugins=(git github npm)
 setopt hist_ignore_dups
 
 export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin"
@@ -73,7 +73,6 @@ or () {
 }
 ### /git aliases ###
 
-alias ctags="`brew --prefix`/bin/ctags"
 alias dri='docker rmi $(docker images -f "dangling=true" -qa)'
 alias drc='docker rm $(docker ps -aq)'
 kill-grep () {
@@ -82,14 +81,10 @@ kill-grep () {
 st () {
   gr && ctags -R --exclude=.git --languages=$1 `pwd` && cd -
 }
-mf () {
-  mdfind -onlyin ./ "$*"
-}
-cop () { cat $1 | pbcopy }
 co () {
-  dist=`ls ~/Documents | fzf-tmux`
+  dist=`ls ~/workspace | fzf-tmux`
   if [ -n "$dist" ]; then
-    cd ~/Documents/$dist
+    cd ~/workspace/$dist
   fi
 }
 vf() {
@@ -104,23 +99,6 @@ vm() {
     vim $file
   fi
 }
-alias kc='kubectl'
-alias kr='kubectl run -it --rm --image=centos:latest --restart=Never bash'
-kcg() {
-  kubectl get $1 --all-namespaces | tail +2 | fzf | awk '{print "-n " $1 " "$2}' | tr "\n" " "
-}
-kg() {
-  kcg $1 | pbcopy
-}
-kd() {
-  kcg $1 | xargs kubectl describe $1
-}
-ke() {
-  kubectl exec -it $@
-}
-kl() {
-  kcg $1 | xargs kubectl logs -f
-}
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 urlencode () {
@@ -129,7 +107,7 @@ urlencode () {
 
 pyv() {
   gr
-  dir=`pwd | gsed -e 's/.*\/\(.*\)/\1/'`_venv
+  dir=`pwd | sed -e 's/.*\/\(.*\)/\1/'`_venv
   if [ -d "$dir" ]; then
     source $dir/bin/activate
   else
@@ -153,7 +131,3 @@ pip-freeze() {
     pip freeze | sort > requirements.txt
   fi
 }
-
-[[ -z "$TMUX" && ! -z "$PS1" ]] && exec tmux
-
-if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
