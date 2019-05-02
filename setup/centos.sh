@@ -5,6 +5,7 @@ set -eu
 # mkdir ~/workspace
 # sudo yum update -y
 # sudo yum install -y zsh git
+# sudo passwd <YOUR_USERNAME>
 # sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 # sed -i -e 's/^alias.*//' ~/.oh-my-zsh/plugins/git/git.plugin.zsh
 # cd ~/workspace
@@ -16,7 +17,7 @@ set -eu
 ./git.sh
 
 # pyenv, rbenv, nvm
-sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc wget
 git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 git clone git://github.com/creationix/nvm.git ~/.nvm
@@ -45,16 +46,24 @@ mkdir -p $(jupyter --data-dir)/nbextensions
 cd $(jupyter --data-dir)/nbextensions
 git clone https://github.com/lambdalisue/jupyter-vim-binding vim_binding
 jupyter nbextension enable vim_binding/vim_binding --sys-prefix
+cd -
 
 # FIXME: vim 
-sudo yum update -y vim*
-sudo yum install -y vim
+sudo yum remove -y vim*
+sudo yum install -y ruby-devel lua-devel automake
+git clone https://github.com/vim/vim.git
+cd vim
+./configure --prefix=/usr/local --with-features=huge --enable-multibyte --enable-rubyinterp --enable-luainterp --enable-cscope --enable-fail-if-missing --with-ruby-command=/usr/bin/ruby
+make
+sudo make install
+cd ..
+rm -rf vim
 git clone --depth=1 https://github.com/universal-ctags/ctags.git
 cd ctags
 ./autogen.sh
 ./configure
 make
-make install
+sudo make install
 cd ..
 rm -rf ctags
 ./vim.sh
@@ -74,14 +83,14 @@ sudo yum remove -y docker docker-common docker-selinux docker-engine
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 sudo yum makecache fast
-sudo yum install docker-ce
+sudo yum install -y docker-ce
 # sudo systemctl start docker
 # sudo systemctl enable docker
 
 # MySQL, SQLite, Redis
 sudo yum remove -y mariadb-libs
 sudo rm -rf /var/lib/mysql/
-sudo yum localinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+sudo yum localinstall -y http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
 sudo yum -y install mysql-community-server sqlite epel-release
 sudo yum install -y redis
 # sudo systemctl enable mysqld.service
