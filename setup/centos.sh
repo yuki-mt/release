@@ -17,7 +17,7 @@ set -eu
 ./git.sh
 
 # pyenv, rbenv, nvm
-sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc wget
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc wget htop lsof
 git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 git clone git://github.com/creationix/nvm.git ~/.nvm
