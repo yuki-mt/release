@@ -11,6 +11,7 @@ setopt hist_ignore_dups
 
 source $ZSH/oh-my-zsh.sh
 
+alias open=termux-open-url
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
 alias rm-merged='git branch --merged | grep -v master | grep -v develop | grep -v "*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
 alias ga='git add -A && git diff --cached'
@@ -51,7 +52,7 @@ or () {
   if [ "$remote" = "http*" ]; then
     open $remote
   else
-    echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/" | xargs open
+    open `echo "$remote" | sed -e "s/git@\(.*\):\(.*\)\.git.*/https:\/\/\1\/\2/"`
   fi
 }
 ### /git aliases ###
