@@ -9,6 +9,11 @@ ZSH_THEME="robbyrussell"
 plugins=(git github npm)
 setopt hist_ignore_dups
 
+
+## SSH settings
+eval `ssh-agent`
+ssh-add ~/.ssh/id_rsa
+
 source $ZSH/oh-my-zsh.sh
 
 alias open=termux-open-url

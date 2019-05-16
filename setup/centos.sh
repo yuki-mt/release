@@ -17,7 +17,7 @@ set -eu
 ./git.sh
 
 # pyenv, rbenv, nvm
-sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc wget htop lsof
+sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel unzip bzip2 gcc wget htop lsof python-devel
 git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 git clone git://github.com/creationix/nvm.git ~/.nvm
@@ -39,6 +39,11 @@ rbenv global 2.6.3
 
 source ~/.zshrc
 
+# PHP
+sudo yum install -y epel-release
+sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+sudo yum install -y --enablerepo=epel,remi,remi-php73 php-opcache php-devel php-mbstring php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-gd php-intl php-fpm php-pdo php
+
 # Python basic
 pip install -U pip
 pip install mypy flake8 jupyter nbextensions
@@ -48,7 +53,6 @@ git clone https://github.com/lambdalisue/jupyter-vim-binding vim_binding
 jupyter nbextension enable vim_binding/vim_binding --sys-prefix
 cd -
 
-# FIXME: vim 
 sudo yum remove -y vim*
 sudo yum install -y ruby-devel lua-devel automake
 git clone https://github.com/vim/vim.git
@@ -101,3 +105,6 @@ sudo yum install -y redis
 sudo rpm -ivh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
 sudo yum -y update nginx-release-centos
 sudo yum -y --enablerepo=nginx install nginx
+
+# mail
+sudo yum install -y nkf postfix
