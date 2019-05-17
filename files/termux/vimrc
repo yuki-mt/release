@@ -186,7 +186,7 @@ command P set paste
 command Np set nopaste
 command Et set expandtab
 command Net set noexpandtab
-command Syn !rsync --exclude='.*' --exclude='*_venv' --exclude='node_modules' --delete -zzav `git rev-parse --show-toplevel`/ instance-1:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
+command Syn !rsync --exclude='.*' --exclude='*_venv' --exclude='node_modules' -zzav `git rev-parse --show-toplevel`/ instance-1:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
 
 
 nnoremap r <C-r>

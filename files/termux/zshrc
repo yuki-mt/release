@@ -18,7 +18,12 @@ source $ZSH/oh-my-zsh.sh
 
 alias open=termux-open-url
 syn() {
-  rsync --exclude='.*' --exclude='*_venv' --exclude='node_modules' --delete -zzav `git rev-parse --show-toplevel`/ instance-1:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
+  rsync --exclude='.*' --exclude='*_venv' --exclude='node_modules' \
+    -zzav `git rev-parse --show-toplevel`/ instance-1:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
+}
+syn-del() {
+  rsync --include='.babelrc' --exclude='.*' --exclude='*_venv' --exclude='node_modules' \
+    --delete -zzav `git rev-parse --show-toplevel`/ instance-1:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
 }
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
 alias rm-merged='git branch --merged | grep -v master | grep -v develop | grep -v "*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
