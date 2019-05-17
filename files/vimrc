@@ -71,6 +71,7 @@ NeoBundle 'junegunn/fzf.vim'
 "NeoBundle 'derekwyatt/vim-scala'
 "NeoBundle 'othree/yajs.vim'                    "ES6用
 "NeoBundle 'maxmellon/vim-jsx-pretty'
+"NeoBundle 'leafgarland/typescript-vim'
 """
 " vimrc に記述されたプラグインでインストールされていないものがないかチェックする
 NeoBundleCheck
