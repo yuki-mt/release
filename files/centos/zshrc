@@ -77,9 +77,6 @@ alias drc='docker rm $(docker ps -aq)'
 kill-grep () {
   ps aux | grep $1 | grep -v grep | awk '{print $2}' | xargs sudo kill -9
 }
-st () {
-  gr && ctags -R --exclude=.git --languages=$1 `pwd` && cd -
-}
 co () {
   dist=`ls ~/workspace | fzf-tmux`
   if [ -n "$dist" ]; then

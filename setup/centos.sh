@@ -62,15 +62,7 @@ make
 sudo make install
 cd ..
 rm -rf vim
-git clone --depth=1 https://github.com/universal-ctags/ctags.git
-cd ctags
-./autogen.sh
-./configure
-make
-sudo make install
-cd ..
-rm -rf ctags
-./vim.sh
+cp ../files/vimrc ~/.vimrc
 
 # fzf
 git clone https://github.com/junegunn/fzf.git ~/.fzf

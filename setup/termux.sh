@@ -29,11 +29,8 @@ bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 
 # ./git.sh
 # cp ../files/termux/tmux.conf ~/.tmux.conf
-# 
+#
 # cp ../files/termux/vimrc ~/.vimrc
-# mkdir ~/.ctags.d
-# cp ../files/ctags ~/.ctags.d/config.ctags
-# cp -R ../files/dict ~/.vim/
 
 
 # pip install -U pip
