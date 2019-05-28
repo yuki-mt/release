@@ -41,6 +41,11 @@ bash -c "$(curl -fsSL https://git.io/oh-my-termux)"
 # pkg install -y scipy
 # LDFLAGS=" -lm -lcompiler_rt" pip install jupyter pandas matplotlib
 
+apt install -y php
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar ~/.local/bin/composer
+
+
 # termux-chroot
 # npm install -y -g n
 # n latest

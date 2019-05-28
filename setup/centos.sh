@@ -43,6 +43,8 @@ source ~/.zshrc
 sudo yum install -y epel-release
 sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 sudo yum install -y --enablerepo=epel,remi,remi-php73 php-opcache php-devel php-mbstring php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-gd php-intl php-fpm php-pdo php
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
 
 # Python basic
 pip install -U pip
