@@ -14,7 +14,8 @@ ZSH_THEME="robbyrussell"
 plugins=(git brew github npm sbt scala)
 setopt hist_ignore_dups
 
-export PATH="/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin"
+source $ZSH/oh-my-zsh.sh
+
 export PATH="$HOME/.rbenv/shims:$PATH"
 eval "$(rbenv init -)"
 
@@ -26,7 +27,10 @@ nvm() {
 }
 
 export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH"
-source $ZSH/oh-my-zsh.sh
+eval "$(pyenv init -)"
+
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+
 
 ### git aliases (comment out aliases in ~/.oh-my-zsh/plugins/git/git.plugin.zsh in advance ###
 alias rm-merged='git branch --merged | grep -v master | grep -v develop | grep -v "*" | while read BRANCH; do git branch -d ${BRANCH}; done; unset BRANCH;'
