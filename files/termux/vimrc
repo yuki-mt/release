@@ -34,7 +34,6 @@ call plug#begin()
 Plug 'nanotech/jellybeans.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'kana/vim-submode'
-Plug 'thinca/vim-quickrun'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
@@ -167,7 +166,6 @@ let g:ale_set_quickfix = 0
 let g:ale_open_list = 0
 let g:ale_keep_list_window_open = 0
 
-command Qr QuickRun
 command Dv ALEGoToDefinitionInVSplit
 command D ALEGoToDefinition
 command R ALEFindReferences
