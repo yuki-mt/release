@@ -131,6 +131,8 @@ let g:ale_fixers = {
 \}
 nmap <silent> aN <Plug>(ale_previous_wrap)
 nmap <silent> an <Plug>(ale_next_wrap)
+" let g:deoplete#sources = {'_': ['ale']}
+" let g:ale_completion_enabled = 1
 let g:ale_fix_on_save = 1
 let g:ale_php_phpcs_standard = 'PSR1,PSR2'
 let g:ale_python_mypy_options = '--ignore-missing-imports'
