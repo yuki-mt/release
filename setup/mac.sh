@@ -20,6 +20,7 @@ set -eu
 # python
 brew install pyenv
 export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:${PATH}"
+sudo installer -pkg /Library/Developer/CommandLineTools/Packages/mac
 pyenv install 3.6.8
 pyenv global 3.6.8
 pip install -U pip
@@ -39,28 +40,30 @@ source ~/.nvm/nvm.sh
 nvm install v10.15.3
 nvm alias default v10.15.3
 
+# tmux
+cp ../files/tmux.conf ~/.tmux.conf
+brew install tmux
+brew install reattach-to-user-namespace
+
 # zshrc
 cp ../files/zshrc ~/.zshrc
 source ~/.zshrc
 
 # PHP
-brew install homebrew/php/php73
+brew install php@73
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
 # vim
 brew install vim
 cp ../files/vimrc ~/.vimrc
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+	    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ./lsp.sh
 
 # fzf
 brew install fzf
 $(brew --prefix)/opt/fzf/install
-
-# tmux
-cp ../files/tmux.conf ~/.tmux.conf
-brew install tmux
-brew install reattach-to-user-namespace
 
 # MeCab
 brew install mecab mecab-ipadic
@@ -68,10 +71,7 @@ git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git
 cd mecab-ipadic-neologd/seed
 xz -dkv mecab-user-dict-seed.*.csv.xz
 export PATH=$PATH:/usr/local/Cellar/mecab/0.996/libexec/mecab
-
-dic_path="/usr/lib64/mecab/dic/ipadic"
-# or dic_path="/usr/local/lib/mecab/dic/ipadic"
-
+dic_path="/usr/local/lib/mecab/dic/ipadic"
 mecab-dict-index -d $dic_path \
   -u mecab-user-dict-seed.dic -f utf-8 -t utf-8 \
   mecab-user-dict-seed.*.csv
