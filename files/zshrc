@@ -136,7 +136,7 @@ pyv() {
     python -m venv $dir
     source $dir/bin/activate
     pip install -U pip
-    pip install flake8 mypy
+    pip install flake8 mypy python-language-server
     pip freeze | sort > .requirements.ignore
   fi
   cd -

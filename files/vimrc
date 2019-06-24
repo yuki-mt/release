@@ -188,4 +188,3 @@ command P set paste
 command Np set nopaste
 command Et set expandtab
 command Net set noexpandtab
-command Syn !rsync --include='.babelrc' --exclude='.*' --exclude='*_venv' --exclude='node_modules' --exclude='__pycache__' --exclude='tags' -zzav `git rev-parse --show-toplevel`/ instance-1.us-west1-b.newagent-4664b:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
