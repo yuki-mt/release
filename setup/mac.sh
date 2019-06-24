@@ -9,6 +9,8 @@ set -eu
 # brew install zsh git
 # curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 # sed -i -e 's/^alias.*//' ~/.oh-my-zsh/plugins/git/git.plugin.zsh
+# sudo vi /etc/shells <- add "/usr/local/bin/zsh"
+# chsh -s /usr/local/bin/zsh
 # cd ~/workspace
 # git clone https://github.com/yuki-mt/scripts.git
 # cd scripts/setup
@@ -20,7 +22,7 @@ set -eu
 # python
 brew install pyenv
 export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:${PATH}"
-sudo installer -pkg /Library/Developer/CommandLineTools/Packages/mac
+# sudo installer -pkg /Library/Developer/CommandLineTools/Packages/mac
 pyenv install 3.6.8
 pyenv global 3.6.8
 pip install -U pip
@@ -50,7 +52,7 @@ cp ../files/zshrc ~/.zshrc
 source ~/.zshrc
 
 # PHP
-brew install php@73
+# brew install php@73
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
@@ -79,6 +81,7 @@ mecab-dict-index -d $dic_path \
 sudo mv mecab-user-dict-seed.dic $dic_path
 cd -
 rm -rf mecab-ipadic-neologd
+echo "$dict_path/mecab-user-dict-seed.dic">> /usr/local/etc/mecabrc
 
 # MySQL, Redis
 brew install mysql@5.7 redis
