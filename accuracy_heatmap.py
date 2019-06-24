@@ -16,7 +16,7 @@ heatmap = np.zeros((len(classes), len(classes)), dtype=np.float)
 # TODO
 def predict(data):
     # [label_Aの確率, label_Bの確率 label_Cの確率]
-    return np.aray([0.8, 0.4, 0.2])
+    return np.array([0.8, 0.4, 0.2])
 
 
 for index, name in enumerate(classes):
