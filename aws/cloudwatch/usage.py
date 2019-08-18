@@ -1,12 +1,12 @@
-import boto3
 from pytz import timezone
 from datetime import datetime, timedelta
-from typing import Iterator, NamedTuple
+from typing import Iterator, NamedTuple, Dict
 
 
-def get_metric_values(client, metric: str, instance_id: str,
-                      period: int = 300, unit='Percent',
-                      interval_hours: int = 24) -> Iterator[float]:
+def get_metric_values(client, namespace: str, metric: str,
+                      dimension: Dict[str, str],
+                      period: int, unit: str,
+                      interval_hours: int) -> Iterator[float]:
     now = datetime.now(timezone('UTC'))
     start_at = now - timedelta(hours=interval_hours)
     max_datapoints = 1000
@@ -14,14 +14,9 @@ def get_metric_values(client, metric: str, instance_id: str,
         'Id': 'm1',
         'MetricStat': {
             'Metric': {
-                'Namespace': 'AWS/EC2',
+                'Namespace': namespace,
                 'MetricName': metric,
-                'Dimensions': [
-                    {
-                        'Name': 'InstanceId',
-                        'Value': instance_id
-                    }
-                ]
+                'Dimensions': [dimension]
             },
             'Period': period,
             'Stat': 'Average',
@@ -68,32 +63,8 @@ def analyze(values: Iterator[float], threshold: float) -> AnalysisResult:
         sum_value += v
         if v > threshold:
             num_above_thresholds += 1
+    if num_total == 0:
+        return AnalysisResult(0.0, 0, 0.0)
     return AnalysisResult(above_ratio=num_above_thresholds / num_total,
                           num_total=num_total,
                           average=sum_value / num_total)
-
-
-def main():
-    instance_id = 'i-xxx'
-    metric_name = 'CPUUtilization'
-    metric_threshold = 1
-    total_threshold = 100
-    ratio_threshold = 0.05
-
-    client = boto3.client('cloudwatch')
-
-    values = get_metric_values(client, metric_name, instance_id)
-    result = analyze(values, metric_threshold)
-    print(result)
-
-    if result.num_total > total_threshold:
-        if result.above_ratio < ratio_threshold:
-            print(f'{metric_name} is too low. instance-id: {instance_id}. average: {result.average}')
-        else:
-            print(f'{metric_name} is moderate. instance-id: {instance_id}. average: {result.average}')
-    else:
-        print(f'number of values is too few to judge. metric-name: {metric_name}. instance-id: {instance_id}')
-
-
-if __name__ == '__main__':
-    main()
