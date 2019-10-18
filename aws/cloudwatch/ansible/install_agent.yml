@@ -1,0 +1,27 @@
+- hosts: ubuntu
+  user: ubuntu
+  vars:
+    dest_dir: /usr/local/src
+    agent_base_url: https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest
+    agent_filename: AmazonCloudWatchAgent.zip
+    checksum: 42a367e844de3f125e655b8909b2204663b40881efc871d6da58e780420ab869
+  tasks:
+    - name: 'Download installation file'
+      get_url: >
+        url={{ agent_url }}/{{ agent_filename }}
+        dest={{ dest_dir }}/{{ item.filename }}
+        sha256sum={{ checksum }}
+        force=True
+    - name: 'unzip the download file'
+      unarchive:
+        src: {{ dest_dir }}/{{ item.filename }}
+        dest: {{ dest_dir }}
+        remote_src: yes
+    - name: 'install'
+      shell: {{ dest_dir }}/install.sh
+      become: yes
+    - name: 'start CloudWatch agent'
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:AmazonCloudWatch-linux -s
+      become: yes
+    - name: 'get status of CloudWatch agent'
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
