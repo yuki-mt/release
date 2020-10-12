@@ -1,0 +1,210 @@
+scriptencoding utf-8
+
+filetype off
+syntax on
+set cursorline
+set expandtab
+set autoindent
+set tabstop=2
+set shiftwidth=2
+set encoding=utf-8
+set fileencoding=utf-8
+set noswapfile
+set nowritebackup
+set backspace=indent,eol,start " Backspaceキーの影響範囲に制限を設けない
+set autoread "外部でファイルに変更がされた場合は読みなおす
+set nobackup   " ファイル保存時にバックアップファイルを作らない
+set noswapfile " ファイル編集中にスワップファイルを作らない
+set hlsearch   " 検索文字列をハイライトする
+set ignorecase
+set clipboard=unnamed,unnamedplus
+set mouse=n
+set wildmenu
+set wildmode=longest:full,full
+set foldmethod=indent
+set nofoldenable
+set foldnestmax=10
+set foldlevel=2
+
+
+filetype plugin indent on
+set t_Co=256
+
+call plug#begin()
+Plug 'nanotech/jellybeans.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'terryma/vim-expand-region'
+Plug 'kana/vim-submode'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'w0rp/ale'
+""" language-specific plugings
+"Plug 'joker1007/vim-markdown-quote-syntax'
+"Plug 'derekwyatt/vim-scala'
+"Plug 'leafgarland/typescript-vim'
+"Plug 'posva/vim-vue'
+"Plug 'autozimu/LanguageClient-neovim', {
+"  \ 'branch': 'next',
+"  \ 'do': 'bash install.sh',
+"  \ }
+""""
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+call plug#end()
+
+
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_camel_case_completion = 1
+let g:deoplete#enable_underbar_completion = 1
+let g:deoplete#smart_case = 1
+let g:deoplete#min_syntax_length = 2
+let g:deoplete#manual_completion_start_length = 1
+let g:deoplete#caching_percent_in_statusline = 1
+let g:deoplete#enable_skip_completion = 1
+let g:deoplete#skip_input_time = '0.5'
+let g:neosnippet#snippets_directory="$HOME/.config/nvim/snippets"
+imap <expr><CR> pumvisible() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<CR>"
+imap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+
+colorscheme jellybeans
+
+let NERDTreeShowHidden=1
+
+augroup vimrc-local
+  autocmd!
+  autocmd BufNewFile,BufReadPost * call s:vimrc_local(expand('<afile>:p:h'))
+augroup END
+
+function! s:vimrc_local(loc)
+  let files = findfile('.vimrc.local', escape(a:loc, ' ') . ';', -1)
+  for i in reverse(filter(files, 'filereadable(v:val)'))
+    source `=i`
+  endfor
+endfunction
+
+nnoremap <silent><C-p> :History<CR>
+nnoremap <silent><C-e> :NERDTreeFind<CR>
+noremap <S-h>   ^
+noremap <S-j>   }
+noremap <S-k>   {
+noremap <S-l>   $
+
+"nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sw :<C-u>sp<CR>
+nnoremap ss :<C-u>vs<CR>
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+
+" for code folding
+nnoremap <space> za
+nnoremap <CR> zA
+
+call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+
+nnoremap r <C-r>
+inoremap <silent> jj <ESC>
+
+imap <C-u> <esc>
+noremap! <C-u> <esc>
+
+nmap <silent> cw "_ce
+nmap <silent> dk "_dd
+
+augroup HTMLANDXML
+  autocmd!
+    autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
+    autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
+    autocmd Filetype vue inoremap <buffer> </ </<C-x><C-o>
+augroup END
+
+
+let g:ale_linters = {
+\   'python': ['flake8', 'mypy', 'pyls'],
+\   'php': ['phpcs', 'php', 'langserver'],
+\   'javascript': ['eslint', 'vls'],
+\   'vue': ['eslint', 'vls']
+\}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\}
+nmap <silent> sN <Plug>(ale_previous_wrap)
+nmap <silent> sn <Plug>(ale_next_wrap)
+" let g:deoplete#sources = {'_': ['ale']}
+" let g:ale_completion_enabled = 1
+let g:ale_fix_on_save = 1
+let g:ale_php_phpcs_standard = 'PSR1,PSR2'
+let g:ale_python_mypy_options = '--ignore-missing-imports'
+let g:ale_python_flake8_options = '--max-line-length=200'
+let g:ale_python_pyls_use_global = 1
+let g:ale_python_pyls_config = {
+\ 'pyls': {
+\   'plugins': {
+\     'flake8': {
+\       'enabled': v:false
+\     },
+\     'pyflakes': {
+\       'enabled': v:false
+\     },
+\     'pydocstyle': {
+\       'enabled': v:false
+\     },
+\     'pycodestyle': {
+\       'enabled': v:false
+\     },
+\     'mypy': {
+\       'enabled': v:false
+\     },
+\     'pylint': {
+\       'enabled': v:false
+\     }
+\   }
+\ }
+\}
+let g:ale_php_langserver_use_global = 1
+let g:ale_php_langserver_executable = $HOME.'/.composer/vendor/bin/php-language-server.php'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_column_always = 0
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 0
+let g:ale_open_list = 0
+let g:ale_keep_list_window_open = 0
+
+command Dv ALEGoToDefinitionInVSplit
+command D ALEGoToDefinition
+command R ALEFindReferences
+command Cd lcd %:h
+command Pwd echo expand("%:p")
+command F Files
+command P set paste
+command Np set nopaste
+command H History
+command S !rsync --exclude='.mypy_cache' --exclude='.git' --exclude='*_venv' --exclude='node_modules' --exclude='__pycache__' -zzav `git rev-parse --show-toplevel`/ matoba.us-central1-a.newagent-4664b:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
+
+command! -nargs=* T vsplit | terminal <args>
+command Tp vsplit | terminal python
+tnoremap <silent> jj <C-\><C-n>
+nnoremap rg :Rg <C-r><C-w><CR>
+nnoremap ff :call fzf#vim#files('.', {'options':'--query '.expand('<cword>')})<CR>

@@ -1,0 +1,33 @@
+- hosts: targets
+  become: yes
+
+  tasks:
+    - block:
+      - name: Create new SSH key
+        openssh_keypair:
+          path: ~/Downloads/{{ username }}_rsa
+          size: 2048
+        when: key_path == ''
+
+      - name: Set key path
+        shell: |
+          if [[ -z "{{ key_path }}" ]]; then
+            cat ~/Downloads/{{ username }}_rsa.pub
+          else
+            cat {{ key_path }}
+          fi
+        register: key_output
+
+      delegate_to: localhost
+      run_once: true
+      become: false
+
+    - name: Add public key
+      blockinfile:
+        path: /home/{{ username }}/.ssh/authorized_keys
+        create: yes
+        group: "{{ username }}"
+        owner: "{{ username }}"
+        mode: 0600
+        block: |
+          {{ key_output.stdout }}

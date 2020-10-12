@@ -1,0 +1,23 @@
+version: '3'
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+  es:
+    build: ./es
+    container_name: es
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./esdata:/usr/share/elasticsearch/data
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+    ports:
+      - 9200:9200

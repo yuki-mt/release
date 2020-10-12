@@ -1,0 +1,46 @@
+name: DestroyEnvironment
+definition:
+  StartAt: DryRun
+  States:
+    DryRun:
+      Type: Choice
+      Choices:
+        - Variable: "$.input.dry_run"
+          BooleanEquals: true
+          Next: Succeed
+      Default: WaitRun
+    WaitRun:
+      Type: Wait
+      Seconds: 30
+      Next: MyParallelTasks
+    MyParallelTasks:
+      Type: Parallel
+      Next: Succeed
+      Branches:
+        - StartAt: RunBatch
+          States:
+            Run1:
+              Type: Task
+              Resource: "arn:aws:states:::batch:submitJob.sync"
+              Parameters:
+                JobName: "RunBatchJob"
+                JobDefinition.$: "$.batch_arn"
+                JobQueue.$: "$.queue_arn"
+                ContainerOverrides:
+                  Command.$: "$.input.batch"
+                  Environment:
+                    - Name: "MY_ENV"
+                      Value.$: "$.my_env"
+              End: true
+        - StartAt: RunLambda
+          States:
+            RunLambda:
+              Type: Task
+              Parameters:
+                input.$: "$.input"
+              Resource:
+                Fn::GetAtt: [Sub2Function, Arn]
+              ResultPath: "$.output.run"
+              End: true
+    Succeed:
+      Type: Succeed

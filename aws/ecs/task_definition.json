@@ -1,0 +1,26 @@
+{
+    "family": "TASK_DEF_NAME",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "CONTAINER_NAME",
+            "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/IMAGE_NAME:TAG",
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/CLUSTER_NAME",
+                    "awslogs-region": "REGION",
+                    "awslogs-stream-prefix": "TASK_DEF_NAME"
+                }
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME",
+    "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME",
+    "cpu": "4096",
+    "memory": "8192"
+}

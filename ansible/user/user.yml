@@ -1,0 +1,14 @@
+- hosts: targets
+  become: yes
+
+  tasks:
+    - name: Add a new user
+      user:
+        name: "{{ username }}"
+        shell: /bin/bash
+
+    - name: Add devops user to the sudoers
+      template: src=./visudo_tmp dest=/etc/sudoers.d/{{ username }} owner=root group=root mode=0755
+
+    - name: Create SSH directory
+      file: path=/home/{{ username }}/.ssh owner={{ username }} group={{ username }} mode=0700 state=directory

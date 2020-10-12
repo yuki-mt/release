@@ -1,0 +1,5 @@
+profile: ${opt:profile, 'default'}
+region: ${opt:region, 'us-east-1'}
+stage: ${opt:stage, 'dev'}
+pipeline_results_table: "tmp-${self:provider.region}-${self:provider.stage}"
+state_machine_arn: "arn:aws:states:${self:provider.region}:${self:provider.accountid}:stateMachine:Main"

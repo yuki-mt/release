@@ -1,0 +1,6 @@
+*_venv/
+.mypy_cache
+__pycache__
+tags
+.vimrc.local
+.requirements.ignore

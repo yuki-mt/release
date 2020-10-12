@@ -1,0 +1,56 @@
+service: backlog-to-s3
+
+provider:
+  name: aws
+  stage: prod
+  runtime: python3.8
+  region: ap-northeast-1
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource: "arn:aws:s3:::MY_SOURCECODE_BUCKET/*"
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+  customDomain:
+    domainName: "my_domain_attached_to_api_gateway"
+    endpointType: 'regional'
+    stage: prod
+    certificateName: "*.my_domain_attached_to_api_gateway"
+    createRoute53Record: true
+    autoDomain: true
+
+package:
+  exclude:
+    - package.json
+    - package-lock.json
+    - node_modules/**
+
+functions:
+  myrepo-ci:
+    handler: handler.lambda_handler
+    memorySize: 128
+    timeout: 30
+    events:
+      - http:
+          path: git/push
+          method: post
+          integration: lambda
+          request:
+            parameters:
+              querystrings:
+                payload: true
+    environment:
+      USER_NAME: backlog-username
+      PASSWORD: ${ssm:/myrepo/cicd/git-password~true}
+      BASIC_USERNAME: backlog-webhook
+      BASIC_PASSWORD: ${ssm:/myrepo/cicd/basic-password~true}
+      BUCKET_NAME: myrepo-cicd
+      S3_PREFIX: source
+
+plugins:
+  - serverless-domain-manager
+  - serverless-python-requirements

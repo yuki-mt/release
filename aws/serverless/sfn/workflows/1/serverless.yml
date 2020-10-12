@@ -1,0 +1,21 @@
+name: Deploy
+definition:
+  StartAt: DryRun
+  States:
+    DryRun:
+      Type: Choice
+      Choices:
+        - Variable: "$.input.dry_run"
+          BooleanEquals: true
+          Next: Succeed
+      Default: Run
+    Run:
+      Type: Task
+      Parameters:
+        input.$: "$.input"
+      Resource:
+        Fn::GetAtt: [Sub1Function, Arn]
+      ResultPath: "$.output.run"
+      Next: Succeed
+    Succeed:
+      Type: Succeed

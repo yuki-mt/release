@@ -1,0 +1,195 @@
+service: StepFunctionsService
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ${file(config/provider.yml):region}
+  profile: ${file(config/provider.yml):profile}
+  stage: ${file(config/provider.yml):stage}
+  accountid: ${opt:accountid, file(config/getAccount.js):getAccountId}
+  deploymentBucket:
+    name: ${file(config/provider.yml):backetname, ''}
+
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+  - serverless-python-requirements
+
+package:
+  individually: true
+  exclude:
+    - config/**
+    - integrationtest/**
+    - workflows/**
+    - node_modules/**
+    - README.md
+    - package-lock.json
+    - package.json
+    - requirements.txt
+
+
+stepFunctions:
+  stateMachines:
+    Main:
+      name: Main
+      loggingConfig:
+        level: ALL
+        includeExecutionData: true
+        destinations:
+          - Fn::GetAtt: [SfnLogGroup, Arn]
+      definition:
+        StartAt: Sub1
+        States:
+          Sub1:
+            Type: Task
+            Resource: "arn:aws:states:::states:startExecution.sync"
+            Parameters:
+              Input:
+                input.$: "$.sub1"
+              StateMachineArn:
+                "Fn::Sub": arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:Sub1
+            ResultPath: "$.output.sub1"
+            Next: Sub1
+          Sub2:
+            Type: Task
+            Resource: "arn:aws:states:::states:startExecution.sync"
+            Parameters:
+              Input:
+                input.$: "$.sub2"
+              StateMachineArn:
+                "Fn::Sub": arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:Sub2
+            ResultPath: "$.output.sub2"
+            Next: Sub3
+            Catch:
+              - ErrorEquals:
+                - States.ALL
+                Next: Sub3
+                ResultPath: "$.error"
+          Sub3:
+            Type: Task
+            Resource: "arn:aws:states:::states:startExecution.sync"
+            Parameters:
+              Input:
+                input.$: "$.sub3"
+              StateMachineArn:
+                "Fn::Sub": arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:Sub3
+            ResultPath: "$.output.sub3"
+            End: true
+
+    # Sub Workflows
+    Sub1:
+      ${file(workflows/1/serverless.yml)}
+    Sub2:
+      ${file(workflows/2/serverless.yml)}
+    Sub3:
+      ${file(workflows/3/serverless.yml)}
+
+# Define Lambda Layer for common Python library
+custom:
+  pythonRequirements:
+    # layer: true
+    dockerizePip: true # Need to launch Docker on your PC.
+    usePipenv: false
+
+functions:
+  Sub1Function:
+    handler: workflows/1/handler.lambda_handler
+    role: lambdaBasicRole
+    package:
+      include:
+        - workflows/1/handler.py
+    # layers:
+    #   - {ref: pythonrequirementslambdalayer}
+    environment:
+      STATE_MACHINE_ARN: ${file(config/provider.yml):state_machine_arn}
+      INPUT_DEFAULT_JSON: ${file(config/provider.yml):input_default_json}
+  Sub2Function:
+    handler: workflows/2/handler.lambda_handler
+    role: lambdaBasicRole
+    package:
+      include:
+        - workflows/2/handler.py
+    # layers:
+    #   - {ref: pythonrequirementslambdalayer}
+    environment:
+      STATE_MACHINE_ARN: ${file(config/provider.yml):state_machine_arn}
+      INPUT_DEFAULT_JSON: ${file(config/provider.yml):input_default_json}
+  Sub3Function:
+    handler: workflows/3/handler.lambda_handler
+    role: lambdaBasicRole
+    package:
+      include:
+        - workflows/3/handler.py
+    # layers:
+    #   - {ref: pythonrequirementslambdalayer}
+    environment:
+      STATE_MACHINE_ARN: ${file(config/provider.yml):state_machine_arn}
+
+resources:
+  Resources:
+    SfnLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: /aws/states/${self:service}-${file(config/provider.yml):stage}
+    lambdaBasicRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:service}-${file(config/provider.yml):stage}-lambdaBasicRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+
+    lambdaBasicPolicy:
+      # Basic Lambda Roles" policy for general purpose
+      Type: AWS::IAM::Policy
+      Properties:
+        PolicyName: ${self:service}-${file(config/provider.yml):stage}-lambdaBasicPolicy
+        Roles:
+          - Ref: lambdaBasicRole
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:DescribeLogStreams
+                - logs:PutLogEvents
+                - logs:getLogEvents
+              Resource:
+                - 'Fn::Join':
+                  - ':'
+                  -
+                    - arn:aws:logs
+                    - Ref: 'AWS::Region'
+                    - Ref: 'AWS::AccountId'
+                    - log-group:/aws/lambda/*:*:*
+                - 'Fn::Join':
+                  - ':'
+                  -
+                    - arn:aws:logs
+                    - Ref: 'AWS::Region'
+                    - Ref: 'AWS::AccountId'
+                    - log-group:/aws/batch/job:log-stream:*
+            - Effect: Allow
+              Action:
+                - dynamodb:DescribeTable
+                - dynamodb:Get*
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:BatchWrite*
+                - dynamodb:Update*
+                - dynamodb:PutItem
+              Resource:
+                - 'Fn::Join':
+                  - ':'
+                  -
+                    - arn:aws:dynamodb
+                    - Ref: 'AWS::Region'
+                    - Ref: 'AWS::AccountId'
+                    - table/${file(config/provider.yml):pipeline_results_table}
