@@ -34,6 +34,14 @@ ssh-keygen
 # sudo n stable
 # sudo apt autoremove -y nodejs npm
 
+# # Ruby
+# git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+# git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+# # check the latest version
+# # rbenv install -l
+# CONFIGURE_OPTS='--disable-install-rdoc' rbenv install 2.7.0
+# rbenv global 2.7.0
+
 
 # # Step 3 (new session)
 # rm ./Miniconda3-latest-Linux-x86_64.sh
