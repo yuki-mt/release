@@ -1,25 +1,13 @@
-__conda_setup="$($HOME/miniconda3/bin/conda 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
 
 pyv() {
   gr
   dir=`pwd | sed -e 's/.*\/\(.*\)/\1/'`
-  if [ -d "$HOME/miniconda3/envs/$dir" ]; then
-    conda activate $dir
+  if [ -f "./pyproject.toml" ]; then
+    poetry shell
   else
-    conda create --name $dir -y
-    conda activate $dir
-    conda install -y pip
-    pip install flake8 mypy python-language-server neovim
+    poetry init
   fi
   cd -
 }

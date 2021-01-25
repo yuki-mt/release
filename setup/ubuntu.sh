@@ -25,9 +25,10 @@ ssh-keygen
 # mkdir ~/.sh-plugin
 # cp ../files/sh-plugin/* ~/.sh-plugin/
 #
-# wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-# chmod +x Miniconda3-latest-Linux-x86_64.sh
-# ./Miniconda3-latest-Linux-x86_64.sh
+# source ~/.zshrc
+# git clone --depth=1 https://github.com/pyenv/pyenv.git ~/.pyenv
+# # check version by `pyenv install -l`
+# pyenv install 3.9.1
 #
 # sudo apt install -y nodejs npm
 # sudo npm install n -g
@@ -47,7 +48,7 @@ ssh-keygen
 # rm ./Miniconda3-latest-Linux-x86_64.sh
 #
 # pip install -U pip
-# pip install mypy flake8
+# pip install mypy flake8 poetry
 #
 # sudo add-apt-repository -y ppa:neovim-ppa/stable
 # pip install neovim
