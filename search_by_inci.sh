@@ -1,8 +1,10 @@
+# 化粧品の成分検索
+
 urlencode () {
   echo "$1" | nkf -WwMQ | tr '\n' % | sed -e "s/=%//g" | sed -e "s/%//g" | tr = %
 }
 
-search_from_jcia_by_inci(){
+search_by_inci(){
   word=`urlencode $1`
   PHPSESSID=$(curl 'https://www.jcia.org/user/business/ingredients/search' \
     -H 'Connection: keep-alive' \
