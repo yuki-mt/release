@@ -34,4 +34,4 @@ search_by_inci(){
        -H 'Cookie: PHPSESSID='$PHPSESSID';' \
        --compressed
 }
-search_from_jcia_by_inci "1,10-DECANEDIOL"
+search_by_inci "1,10-DECANEDIOL"
