@@ -21,6 +21,13 @@ umask 002
 # eval `ssh-agent`
 # ssh-add ~/.ssh/id_rsa
 # # }}
+# # for WSL
+# # {{
+# copy () {
+#   cat $1 | clip.exe
+# }
+# # }}
+#
 #
 # # for Termux
 # # {{
@@ -31,7 +38,7 @@ umask 002
 # # {{
 # setopt hist_ignore_dups
 # export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
-# cop () { cat $1 | pbcopy }
+# copy () { cat $1 | pbcopy }
 # # }}
 
 source $ZSH/oh-my-zsh.sh

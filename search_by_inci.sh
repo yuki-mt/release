@@ -21,6 +21,8 @@ search_by_inci(){
     --data-raw "search%5Bfreeword%5D=$word" \
     --compressed -i | grep 'Set-Cookie: PHPSESSID=' | cut -d '='  -f2 | cut -d ';' -f1)
 
+  echo $PHPSESSID
+
   curl 'https://www.jcia.org/user/business/ingredients/list/page/0' \
        -H 'Connection: keep-alive' \
        -H 'Accept: text/plain, */*; q=0.01' \
