@@ -1,0 +1,64 @@
+swagger: "2.0"
+info:
+  description: "API to get recommendation items"
+  version: "1.0.0"
+  title: "Personalize"
+host: "xxx.execute-api.us-west-2.amazonaws.com"
+basePath: "/prod"
+schemes:
+- "https"
+paths:
+  /recommends/users/{user_id}:
+    get:
+      tags:
+      - "recommendation_user"
+      summary: "List recommendation items by User ID"
+      description: |
+        おすすめのItem IDのリストを返します。
+      operationId: "getUserRecommendById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "size"
+        in: "query"
+        description: "size of item_ids"
+        type: "integer"
+        format: "int64"
+        default: 10
+      - name: "page"
+        in: "query"
+        description: "page number of item_ids"
+        type: "integer"
+        format: "int64"
+        default: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserRecommendation"
+      security:
+      - api_key: []
+definitions:
+  UserRecommendation:
+    type: "object"
+    properties:
+      user_id:
+        type: "integer"
+        format: "int64"
+      item_ids:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "X-API-Key"
+    in: "header"
