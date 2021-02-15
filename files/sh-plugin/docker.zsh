@@ -20,12 +20,12 @@ _k_search () {
 
 _k_search_for_forward () {
   local ns svcs pods
-  ns="${2:='-n default'}"
+  ns="${1:='-n default'}"
 
   svcs=`eval "kubectl get svc $ns --no-headers" \
     | grep ClusterIP | awk '{print "svc/"$1,$5}' \
     | sed -e 's;/TCP;;'`
-  pods=`kubectl get po $ns --no-headers \
+  pods=`eval "kubectl get po $ns --no-headers" \
     | awk '{print $1}' | sed -e "s/$/${TAB}80/"`
   echo "$pods\n$svcs" | fzf --select-1
 }
