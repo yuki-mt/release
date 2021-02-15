@@ -11,30 +11,37 @@ alias k_ns_clear="rm $cache_file"
 _k_search () {
   local resource ns
   resource=$1
-  ns=${2:="default"}
+  ns=${2:="-n default"}
 
-  kubectl get $resource -n $ns --no-headers \
+  kubectl get $resource $ns --no-headers \
     | fzf --select-1 \
     | awk '{ print $1 }'
 }
 
 _k_search_for_forward () {
   local ns svcs pods
-  ns=${1:="default"}
+  ns=${1:="-n default"}
 
-  svcs=`kubectl get svc -n $ns --no-headers \
+  svcs=`kubectl get svc $ns --no-headers \
     | grep ClusterIP | awk '{print "svc/"$1,$5}' \
     | sed -e 's;/TCP;;'`
-  pods=`kubectl get po -n $ns --no-headers \
+  pods=`kubectl get po $ns --no-headers \
     | awk '{print $1}' | sed -e "s/$/${TAB}80/"`
   echo "$pods\n$svcs" | fzf --select-1
 }
 
 _k_search_ns () {
+  local rtn
   if [ ! -f "$cache_file" ]; then
     kubectl get ns --no-headers > "$cache_file"
+    echo "all-namespaces" >> "$cache_file"
   fi
-  cat "$cache_file" | fzf --select-1 | awk '{ print $1 }'
+  rtn=`cat "$cache_file" | fzf --select-1 | awk '{ print $1 }'`
+  if [[ "$rtn" =~ "all-namespaces" ]]; then
+    echo '--all-namespaces'
+  else
+    echo "-n $rtn"
+  fi
 }
 
 _k_search_resource_type () {
@@ -97,7 +104,7 @@ kk() {
     cmd='logs -f'
   fi
 
-  fnl_cmd="kubectl $cmd $rt -n $ns $rn $ext"
+  fnl_cmd="kubectl $cmd $rt $ns $rn $ext"
   _k_echo $fnl_cmd
   # echo ": `date +%s`:0;$fnl_cmd" >> ~/.zsh_history
   eval $fnl_cmd
