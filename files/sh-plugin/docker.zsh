@@ -11,18 +11,18 @@ alias k_ns_clear="rm $cache_file"
 _k_search () {
   local resource ns
   resource=$1
-  ns=${2:="-n default"}
+  ns="${2:='-n default'}"
 
-  kubectl get $resource $ns --no-headers \
+  eval "kubectl get $resource $ns --no-headers" \
     | fzf --select-1 \
     | awk '{ print $1 }'
 }
 
 _k_search_for_forward () {
   local ns svcs pods
-  ns=${1:="-n default"}
+  ns="${2:='-n default'}"
 
-  svcs=`kubectl get svc $ns --no-headers \
+  svcs=`eval "kubectl get svc $ns --no-headers" \
     | grep ClusterIP | awk '{print "svc/"$1,$5}' \
     | sed -e 's;/TCP;;'`
   pods=`kubectl get po $ns --no-headers \
@@ -75,13 +75,13 @@ kk() {
   # Select Resource
   ary=('exec' logs)
   if [[ " ${ary[@]} " =~ " ${cmd} " ]]; then
-    rn=`_k_search pod $ns`
+    rn=`_k_search pod "$ns"`
   elif [[ "port-forward" == $cmd ]]; then
-    _rn=`_k_search_for_forward $ns`
+    _rn=`_k_search_for_forward "$ns"`
     rn=`echo $_rn | awk '{print $1}'`
     _port=`echo $_rn | awk '{print $2}'`
   elif [[ "describe" == $cmd ]]; then
-    rn=`_k_search $rt $ns`
+    rn=`_k_search $rt "$ns"`
   else
     rn=''
   fi
