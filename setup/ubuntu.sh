@@ -72,3 +72,5 @@ ssh-keygen
 # sudo usermod -a -G docker $USER
 # sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 # sudo chmod +x /usr/local/bin/docker-compose
+# # Only for WSL2
+# bash ./wsl2.sh
