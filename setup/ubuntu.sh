@@ -49,6 +49,7 @@ ssh-keygen
 #
 # pip install -U pip
 # pip install mypy flake8 poetry
+# poetry config virtualenvs.in-project true
 #
 # sudo add-apt-repository -y ppa:neovim-ppa/stable
 # pip install neovim
