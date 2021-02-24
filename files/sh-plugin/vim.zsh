@@ -1,7 +1,7 @@
 alias vim='nvim'
 
 vf() {
-  file=`find . -name "*$1" | fzf`
+  file=`find . | grep -v -e \.venv -e mypy_cache -e pycache -e \.git -e node_module | fzf`
   if [ -n "$file" ]; then
   vim $file
   fi
