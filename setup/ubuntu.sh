@@ -25,8 +25,8 @@ ssh-keygen
 # mkdir ~/.sh-plugin
 # cp ../files/sh-plugin/* ~/.sh-plugin/
 #
-# source ~/.zshrc
 # git clone --depth=1 https://github.com/pyenv/pyenv.git ~/.pyenv
+# export PATH="$HOME/.pyenv/bin:$PATH"
 # # check version by `pyenv install -l`
 # pyenv install 3.9.1
 #
@@ -34,6 +34,7 @@ ssh-keygen
 # sudo npm install n -g
 # sudo n stable
 # sudo apt autoremove -y nodejs npm
+# source ~/.zshrc
 
 # # Ruby
 # git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -45,8 +46,6 @@ ssh-keygen
 
 
 # # Step 3 (new session)
-# rm ./Miniconda3-latest-Linux-x86_64.sh
-#
 # pip install -U pip
 # pip install mypy flake8 poetry
 # poetry config virtualenvs.in-project true
@@ -64,7 +63,7 @@ ssh-keygen
 # git clone https://github.com/junegunn/fzf.git ~/.fzf
 # ~/.fzf/install
 #
-# # Docker
+# # Docker (ignore in WSL2)
 # sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 # sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
