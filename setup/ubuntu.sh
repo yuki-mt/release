@@ -19,7 +19,7 @@ ssh-keygen
 # # Step 2 (new session)
 # bash ./git.sh
 #
-# sudo apt-get install -y gcc make openssl libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev liblzma-dev unzip ripgrep jq tmux wget
+# sudo apt-get install -y gcc make openssl libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev liblzma-dev unzip ripgrep jq tmux wget libffi-dev
 # cp ../files/tmux.conf ~/.tmux.conf
 # cp ../files/zshrc ~/.zshrc
 # mkdir ~/.sh-plugin
@@ -29,6 +29,7 @@ ssh-keygen
 # export PATH="$HOME/.pyenv/bin:$PATH"
 # # check version by `pyenv install -l`
 # pyenv install 3.9.1
+# pyenv global 3.9.1
 #
 # sudo apt install -y nodejs npm
 # sudo npm install n -g
@@ -60,7 +61,7 @@ ssh-keygen
 #     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 # bash lsp.sh
 #
-# git clone https://github.com/junegunn/fzf.git ~/.fzf
+# git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 # ~/.fzf/install
 #
 # # Docker (ignore in WSL2)
