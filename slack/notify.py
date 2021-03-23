@@ -7,7 +7,6 @@ payload = {
     "channel": "#general",
     "username": "webhookbot",
     "icon_emoji": ":ghost:",
-    "text": "Optional text that appears above the attachment block",
     'text': "<https://example.com|Overlook Hotel>\n:x: :ok: "
 }
 # attachments, blocks:
