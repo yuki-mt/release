@@ -155,7 +155,6 @@ nmap <silent> sn <Plug>(ale_next_wrap)
 let g:ale_fix_on_save = 1
 let g:ale_php_phpcs_standard = 'PSR1,PSR2'
 let g:ale_python_mypy_options = '--ignore-missing-imports'
-let g:ale_python_flake8_options = '--max-line-length=200'
 let g:ale_python_pyls_use_global = 1
 let g:ale_python_pyls_config = {
 \ 'pyls': {
