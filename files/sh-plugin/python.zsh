@@ -1,5 +1,8 @@
 export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
+alias pp='poetry run python'
+alias pr='poetry run'
+alias pi='poetry run ipython'
 
 pyv() {
   gr
@@ -10,18 +13,6 @@ pyv() {
     poetry init
   fi
   cd -
-}
-
-pip-freeze() {
-   gr
-  if [ -f ".requirements.ignore" ]; then
-    pip freeze | sort > tmp-req.txt
-    comm -13 .requirements.ignore tmp-req.txt > requirements.txt
-    rm tmp-req.txt
-  else
-    echo '.requirements.ignore is not found.'
-    pip freeze | sort > requirements.txt
-  fi
 }
 
 pytest-setup() {
