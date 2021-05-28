@@ -43,11 +43,9 @@ Plug 'w0rp/ale'
 "Plug 'joker1007/vim-markdown-quote-syntax'
 "Plug 'derekwyatt/vim-scala'
 "Plug 'leafgarland/typescript-vim'
+"Plug 'jpalardy/vim-slime', { 'for': 'python' }
+"Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
 "Plug 'posva/vim-vue'
-"Plug 'autozimu/LanguageClient-neovim', {
-"  \ 'branch': 'next',
-"  \ 'do': 'bash install.sh',
-"  \ }
 """"
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -200,10 +198,20 @@ command F Files
 command P set paste
 command Np set nopaste
 command H History
-command S !rsync --exclude='.mypy_cache' --exclude='.git' --exclude='*_venv' --exclude='node_modules' --exclude='__pycache__' -zzav `git rev-parse --show-toplevel`/ matoba.us-central1-a.newagent-4664b:/home/u0_a84/workspace/$(basename `git rev-parse --show-toplevel`)/
 
 command! -nargs=* T vsplit | terminal <args>
 command Tp vsplit | terminal python
 tnoremap <silent> jj <C-\><C-n>
 nnoremap rg :Rg <C-r><C-w><CR>
 nnoremap ff :call fzf#vim#files('.', {'options':'--query '.expand('<cword>')})<CR>
+
+"" uncomment out in the case of using hanschen/vim-ipython-cell and jpalardy/vim-slime
+"let g:slime_target = "tmux"
+"let g:slime_cell_delimiter = "# %%"
+"let g:slime_python_ipython = 1
+"" when use in another window
+"let g:slime_default_config = {"socket_name": "default", "target_pane": "{last}"}
+"" when use in split windows
+"" let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.1"}
+"let g:slime_dont_ask_default = 1
+"nnoremap <C-M> :IPythonCellExecuteCellVerboseJump<CR>
