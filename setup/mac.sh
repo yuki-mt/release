@@ -16,17 +16,18 @@ set -eu
 # cd scripts/setup
 # ./mac.sh
 
-# git
+ssh-keygen
 ./git.sh
 
-# python
 brew install pyenv
 export PATH="$HOME/.pyenv/shims:$HOME/.pyenv/bin:${PATH}"
 # sudo installer -pkg /Library/Developer/CommandLineTools/Packages/mac
-pyenv install 3.6.8
-pyenv global 3.6.8
+# # check version by `pyenv install -l`
+pyenv install 3.9.1
+pyenv global 3.9.1
 pip install -U pip
-pip install mypy flake8
+pip install mypy flake8 poetry neovim
+poetry config virtualenvs.in-project true
 
 # ruby
 brew install rbenv ruby-build
@@ -37,15 +38,19 @@ rbenv rehash
 rbenv global 2.6.3
 
 # node
-git clone git://github.com/creationix/nvm.git ~/.nvm
-source ~/.nvm/nvm.sh
-nvm install v10.15.3
-nvm alias default v10.15.3
+brew install nodebrew
+nodebrew setup
+nodebrew install-binary stable
+nodebrew use stable # ?
 
 # tmux
 cp ../files/tmux.conf ~/.tmux.conf
 brew install tmux
 brew install reattach-to-user-namespace
+
+# fzf
+brew install fzf
+$(brew --prefix)/opt/fzf/install
 
 # zshrc
 cp ../files/zshrc ~/.zshrc
@@ -67,12 +72,9 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ./lsp.sh
 
-# fzf
-brew install fzf
-$(brew --prefix)/opt/fzf/install
 
 # MySQL, Redis
-brew install mysql@5.7 redis
+brew install mysql redis
 
 # Docker
 brew install kubernetes-cli
