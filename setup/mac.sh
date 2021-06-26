@@ -65,7 +65,7 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
 # vim
-brew install neovim
+brew install neovim ripgrep
 mkdir -p ~/.config/nvim
 cp ../files/vimrc ~/.config/nvim/init.vim
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
