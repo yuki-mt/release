@@ -6,5 +6,6 @@ sudo npm install -g eslint vls
 # cd ~/.composer
 # composer run-script --working-dir=vendor/felixfbecker/language-server parse-stubs
 
+# gem install solargraph
 
 cp -R ../files/snippets ~/.config/nvim/snippets

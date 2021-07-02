@@ -39,6 +39,7 @@ Plug 'kana/vim-submode'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 """ language-specific plugings
 "Plug 'joker1007/vim-markdown-quote-syntax'
 "Plug 'derekwyatt/vim-scala'
@@ -141,6 +142,7 @@ let g:ale_linters = {
 \   'python': ['flake8', 'mypy', 'pyls'],
 \   'php': ['phpcs', 'php', 'langserver'],
 \   'javascript': ['eslint', 'vls'],
+\   'ruby': ['solargraph', 'rubocop'],
 \   'vue': ['eslint', 'vls']
 \}
 let g:ale_fixers = {
@@ -149,7 +151,7 @@ let g:ale_fixers = {
 nmap <silent> sN <Plug>(ale_previous_wrap)
 nmap <silent> sn <Plug>(ale_next_wrap)
 " let g:deoplete#sources = {'_': ['ale']}
-" let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 1
 let g:ale_fix_on_save = 1
 let g:ale_php_phpcs_standard = 'PSR1,PSR2'
 let g:ale_python_mypy_options = '--ignore-missing-imports'
@@ -188,6 +190,8 @@ let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 0
 let g:ale_open_list = 0
 let g:ale_keep_list_window_open = 0
+let g:ale_ruby_solargraph_executable = 'solargraph'
+let g:ale_ruby_solargraph_options = {}
 
 command Dv ALEGoToDefinition -vsplit
 command D ALEGoToDefinition
